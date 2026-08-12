@@ -3,6 +3,9 @@
 ========================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
+    // 0. Initialize Dark/Light Theme System
+    initThemeSwitcher();
+
     // 1. Highlight Current Active Page Link in Navigation
     const currentPath = window.location.pathname.split('/').pop() || 'index.html';
     const navLinks = document.querySelectorAll('.nav-links a');
@@ -383,4 +386,56 @@ function generateAIResponse(q) {
     }
 
     return `I am here to help you with modern farming knowledge! You can ask me about:<br>• 🌾 Current Mandi Rates (Wheat, Mustard, Paddy, Cotton)<br>• 🏛️ Government Subsidies & Schemes (PM-KISAN, PMKSY, KUSUM)<br>• 🐛 Crop Disease Diagnosis & Remedying<br>• 🌤️ Live Weather Forecasts<br><br>Try asking: <em>"What is the price of Wheat today?"</em> or <em>"How to get solar pump subsidy?"</em>`;
+}
+
+/* ==========================================
+   GLOBAL DARK / LIGHT THEME SYSTEM
+========================================== */
+function initThemeSwitcher() {
+    const savedTheme = localStorage.getItem('grow_theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+    }
+
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        let actionsWrapper = navbar.querySelector('.nav-actions-wrapper');
+        const mobileBtn = navbar.querySelector('.mobile-menu-btn');
+
+        if (!actionsWrapper && mobileBtn) {
+            actionsWrapper = document.createElement('div');
+            actionsWrapper.className = 'nav-actions-wrapper';
+            navbar.insertBefore(actionsWrapper, mobileBtn);
+            actionsWrapper.appendChild(mobileBtn);
+        }
+
+        if (!document.getElementById('theme-toggle-btn')) {
+            const btn = document.createElement('button');
+            btn.id = 'theme-toggle-btn';
+            btn.className = 'theme-toggle-btn';
+            btn.setAttribute('aria-label', 'Toggle Theme');
+            btn.setAttribute('title', 'Toggle Dark / Light Mode');
+            btn.innerHTML = document.body.classList.contains('dark-theme') 
+                ? '<i class="fa-solid fa-sun"></i>' 
+                : '<i class="fa-solid fa-moon"></i>';
+            
+            if (actionsWrapper && mobileBtn) {
+                actionsWrapper.insertBefore(btn, mobileBtn);
+            } else if (actionsWrapper) {
+                actionsWrapper.appendChild(btn);
+            } else {
+                navbar.appendChild(btn);
+            }
+
+            btn.addEventListener('click', () => {
+                const isDark = document.body.classList.toggle('dark-theme');
+                localStorage.setItem('grow_theme', isDark ? 'dark' : 'light');
+                btn.innerHTML = isDark 
+                    ? '<i class="fa-solid fa-sun"></i>' 
+                    : '<i class="fa-solid fa-moon"></i>';
+                
+                showToast(isDark ? 'Dark Mode Activated 🌙' : 'Light Mode Activated ☀️', isDark ? 'fa-moon' : 'fa-sun');
+            });
+        }
+    }
 }

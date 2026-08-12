@@ -1,0 +1,278 @@
+{
+    "summary": {
+        "total_crop_revenue": 840000,
+        "total_crops_listed": 64,
+        "website_visitors": 9820,
+        "active_farmers": 342,
+        "orders_this_month": 1284,
+        "avg_yield_per_acre": 18.5,
+        "last_updated": "2024-08-12"
+    },
+    "monthly_revenue": [
+        {
+            "month": "Jan 2024",
+            "revenue": 52000,
+            "orders": 98
+        },
+        {
+            "month": "Feb 2024",
+            "revenue": 68000,
+            "orders": 134
+        },
+        {
+            "month": "Mar 2024",
+            "revenue": 95000,
+            "orders": 189
+        },
+        {
+            "month": "Apr 2024",
+            "revenue": 112000,
+            "orders": 221
+        },
+        {
+            "month": "May 2024",
+            "revenue": 134000,
+            "orders": 265
+        },
+        {
+            "month": "Jun 2024",
+            "revenue": 98000,
+            "orders": 194
+        },
+        {
+            "month": "Jul 2024",
+            "revenue": 148000,
+            "orders": 293
+        },
+        {
+            "month": "Aug 2024",
+            "revenue": 133000,
+            "orders": 263
+        }
+    ],
+    "crops": [
+        {
+            "id": "C001",
+            "name": "Wheat",
+            "category": "Grains",
+            "price_per_kg": 28,
+            "stock_kg": 12000,
+            "sold_kg": 21500,
+            "season": "Rabi"
+        },
+        {
+            "id": "C002",
+            "name": "Rice (Basmati)",
+            "category": "Grains",
+            "price_per_kg": 65,
+            "stock_kg": 8500,
+            "sold_kg": 18200,
+            "season": "Kharif"
+        },
+        {
+            "id": "C003",
+            "name": "Tomato",
+            "category": "Vegetables",
+            "price_per_kg": 35,
+            "stock_kg": 4200,
+            "sold_kg": 9800,
+            "season": "Rabi"
+        },
+        {
+            "id": "C004",
+            "name": "Potato",
+            "category": "Vegetables",
+            "price_per_kg": 22,
+            "stock_kg": 9000,
+            "sold_kg": 16400,
+            "season": "Rabi"
+        },
+        {
+            "id": "C005",
+            "name": "Onion",
+            "category": "Vegetables",
+            "price_per_kg": 30,
+            "stock_kg": 6500,
+            "sold_kg": 13200,
+            "season": "Kharif"
+        },
+        {
+            "id": "C006",
+            "name": "Sugarcane",
+            "category": "Cash Crops",
+            "price_per_kg": 4,
+            "stock_kg": 50000,
+            "sold_kg": 82000,
+            "season": "Kharif"
+        },
+        {
+            "id": "C007",
+            "name": "Mango",
+            "category": "Fruits",
+            "price_per_kg": 80,
+            "stock_kg": 2800,
+            "sold_kg": 5400,
+            "season": "Summer"
+        },
+        {
+            "id": "C008",
+            "name": "Banana",
+            "category": "Fruits",
+            "price_per_kg": 40,
+            "stock_kg": 3500,
+            "sold_kg": 7200,
+            "season": "All Year"
+        },
+        {
+            "id": "C009",
+            "name": "Cotton",
+            "category": "Cash Crops",
+            "price_per_kg": 62,
+            "stock_kg": 7200,
+            "sold_kg": 11000,
+            "season": "Kharif"
+        },
+        {
+            "id": "C010",
+            "name": "Soybean",
+            "category": "Grains",
+            "price_per_kg": 45,
+            "stock_kg": 5400,
+            "sold_kg": 9600,
+            "season": "Kharif"
+        },
+        {
+            "id": "C011",
+            "name": "Chilli",
+            "category": "Vegetables",
+            "price_per_kg": 120,
+            "stock_kg": 1200,
+            "sold_kg": 2800,
+            "season": "Rabi"
+        },
+        {
+            "id": "C012",
+            "name": "Papaya",
+            "category": "Fruits",
+            "price_per_kg": 30,
+            "stock_kg": 2000,
+            "sold_kg": 4100,
+            "season": "All Year"
+        }
+    ],
+    "crop_categories": [
+        {
+            "category": "Vegetables",
+            "crop_count": 22,
+            "revenue": 336000,
+            "percentage": 40
+        },
+        {
+            "category": "Grains",
+            "crop_count": 18,
+            "revenue": 252000,
+            "percentage": 30
+        },
+        {
+            "category": "Fruits",
+            "crop_count": 14,
+            "revenue": 168000,
+            "percentage": 20
+        },
+        {
+            "category": "Cash Crops",
+            "crop_count": 10,
+            "revenue": 84000,
+            "percentage": 10
+        }
+    ],
+    "traffic_sources": [
+        {
+            "source": "Organic Search",
+            "visitors": 3928,
+            "percentage": 40.0
+        },
+        {
+            "source": "Direct",
+            "visitors": 2160,
+            "percentage": 22.0
+        },
+        {
+            "source": "Social Media",
+            "visitors": 1473,
+            "percentage": 15.0
+        },
+        {
+            "source": "Referral",
+            "visitors": 884,
+            "percentage": 9.0
+        },
+        {
+            "source": "Email Campaign",
+            "visitors": 786,
+            "percentage": 8.0
+        },
+        {
+            "source": "Paid Ads",
+            "visitors": 589,
+            "percentage": 6.0
+        }
+    ],
+    "state_wise_sales": [
+        {
+            "state": "Punjab",
+            "revenue": 168000,
+            "farmers": 82
+        },
+        {
+            "state": "Maharashtra",
+            "revenue": 147000,
+            "farmers": 71
+        },
+        {
+            "state": "Uttar Pradesh",
+            "revenue": 134000,
+            "farmers": 65
+        },
+        {
+            "state": "Madhya Pradesh",
+            "revenue": 112000,
+            "farmers": 54
+        },
+        {
+            "state": "Rajasthan",
+            "revenue": 98000,
+            "farmers": 42
+        },
+        {
+            "state": "Gujarat",
+            "revenue": 84000,
+            "farmers": 28
+        },
+        {
+            "state": "Others",
+            "revenue": 97000,
+            "farmers": 0
+        }
+    ],
+    "seasonal_performance": [
+        {
+            "season": "Rabi (Winter)",
+            "crops": 28,
+            "revenue": 378000,
+            "avg_yield": 20.2
+        },
+        {
+            "season": "Kharif (Monsoon)",
+            "crops": 24,
+            "revenue": 336000,
+            "avg_yield": 17.8
+        },
+        {
+            "season": "Zaid (Summer)",
+            "crops": 12,
+            "revenue": 126000,
+            "avg_yield": 14.6
+        }
+    ]
+}

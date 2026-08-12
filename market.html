@@ -667,10 +667,10 @@
                         <div style="font-size: 12px; color: var(--text-muted);">${item.state}</div>
                     </td>
                     <td><strong>${crop.name}</strong></td>
-                    <td><span style="background:#eef7f0; padding: 2px 8px; border-radius: 6px; font-size: 12px;">${item.variety}</span></td>
+                    <td><span class="variety-badge">${item.variety}</span></td>
                     <td>₹ ${item.min.toLocaleString()}</td>
                     <td>₹ ${item.max.toLocaleString()}</td>
-                    <td><strong style="color: var(--primary-dark); font-size: 17px;">₹ ${item.modal.toLocaleString()}</strong></td>
+                    <td><strong class="mandi-modal-rate">₹ ${item.modal.toLocaleString()}</strong></td>
                     <td>
                         <span class="${item.isUp ? 'price-up' : 'price-down'}">
                             <i class="fa-solid ${item.isUp ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'}"></i> ${item.change}
@@ -704,10 +704,10 @@
                         <div style="font-size: 12px; color: var(--text-muted);">${item.state}</div>
                     </td>
                     <td><strong>${item.cropName}</strong></td>
-                    <td><span style="background:#eef7f0; padding: 2px 8px; border-radius: 6px; font-size: 12px;">${item.variety}</span></td>
+                    <td><span class="variety-badge">${item.variety}</span></td>
                     <td>₹ ${item.min.toLocaleString()}</td>
                     <td>₹ ${item.max.toLocaleString()}</td>
-                    <td><strong style="color: var(--primary-dark); font-size: 17px;">₹ ${item.modal.toLocaleString()}</strong></td>
+                    <td><strong class="mandi-modal-rate">₹ ${item.modal.toLocaleString()}</strong></td>
                     <td>
                         <span class="${item.isUp ? 'price-up' : 'price-down'}">
                             <i class="fa-solid ${item.isUp ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'}"></i> ${item.change}

@@ -1519,7 +1519,8 @@ footer p {
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
     border: 1px solid #e2ece4;
-    margin-bottom: 20px;
+    margin-top: 15px;
+    margin-bottom: 25px;
 }
 
 .market-search-bar input {
@@ -1816,7 +1817,7 @@ footer p {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 24px;
     margin-top: -55px;
-    margin-bottom: 35px;
+    margin-bottom: 50px;
     position: relative;
     z-index: 10;
 }
@@ -2522,4 +2523,1022 @@ footer p:last-child {
         bottom: 85px;
         height: 500px;
     }
+}
+
+/* ==========================================
+   THEME TOGGLE BUTTON STYLING
+/* Header Actions Wrapper (Theme Toggle + Mobile Menu Button) */
+.nav-actions-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+    z-index: 1005;
+}
+
+.theme-toggle-btn {
+    background: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #C8E6C9;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    flex-shrink: 0;
+}
+
+.theme-toggle-btn:hover {
+    background: #2E7D32;
+    color: #ffffff;
+    transform: scale(1.1) rotate(15deg);
+    border-color: #2E7D32;
+}
+
+body.dark-theme .theme-toggle-btn {
+    background: #2D3E34;
+    color: #FFD54F;
+    border-color: #3E5446;
+}
+
+body.dark-theme .theme-toggle-btn:hover {
+    background: #FFD54F;
+    color: #121915;
+    border-color: #FFD54F;
+}
+
+@media (max-width: 768px) {
+    .nav-actions-wrapper {
+        gap: 10px;
+    }
+    .theme-toggle-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 17px;
+    }
+}
+
+/* ==========================================
+   GLOBAL DARK MODE SYSTEM
+========================================== */
+body.dark-theme {
+    --bg-color: #111813;
+    --card-bg: #1A241E;
+    --text-primary: #F0F5F1;
+    --text-secondary: #B0C4B5;
+    --text-muted: #7A9381;
+    --border-color: #2A3B30;
+    --primary-light: rgba(46, 125, 50, 0.22);
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.6);
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+}
+
+/* Header Navbar in Dark Mode */
+body.dark-theme header {
+    background: #162019;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid #25362B;
+}
+
+body.dark-theme .nav-links a {
+    color: #D2E3D6;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+body.dark-theme .nav-links a:hover,
+body.dark-theme .nav-links a.active {
+    color: #4CAF50 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    font-weight: 700;
+}
+
+body.dark-theme .mobile-menu-btn {
+    color: #F0F5F1;
+}
+
+body.dark-theme .nav-links {
+    background: #162019;
+}
+
+body.dark-theme .mobile-menu-header-item {
+    border-bottom-color: #2A3B30;
+}
+
+body.dark-theme .mobile-menu-title {
+    color: #66BB6A;
+}
+
+/* Cards & Content Containers in Dark Mode */
+body.dark-theme .crop-card,
+body.dark-theme .highlight-card,
+body.dark-theme .managed-farm-card,
+body.dark-theme .portal-card,
+body.dark-theme .scheme-card,
+body.dark-theme .weather-card,
+body.dark-theme .calc-box,
+body.dark-theme .modal-box,
+body.dark-theme .doctor-card,
+body.dark-theme .faq-item,
+body.dark-theme .crop-analysis-card,
+body.dark-theme .farm-metrics-bar,
+body.dark-theme .feature-card,
+body.dark-theme .stat-card,
+body.dark-theme .contact-card {
+    background: #1A241E;
+    border-color: #2A3B30;
+    color: #F0F5F1;
+}
+
+body.dark-theme .crop-title,
+body.dark-theme .card-title,
+body.dark-theme .highlight-title,
+body.dark-theme .portal-title,
+body.dark-theme h1, body.dark-theme h2, body.dark-theme h3, body.dark-theme h4 {
+    color: #F0F5F1;
+}
+
+body.dark-theme p, body.dark-theme span, body.dark-theme label {
+    color: var(--text-secondary);
+}
+
+/* Page Header & Hero Sections */
+body.dark-theme .page-header {
+    background: linear-gradient(135deg, #0D150F, #19271D);
+    border-bottom: 1px solid #233327;
+}
+
+body.dark-theme .hero {
+    background: linear-gradient(135deg, #0D150F, #18281D);
+}
+
+/* Inputs & Selects in Dark Mode */
+body.dark-theme input[type="text"],
+body.dark-theme input[type="number"],
+body.dark-theme select,
+body.dark-theme textarea,
+body.dark-theme .search-box input {
+    background: #141C16;
+    border-color: #2A3B30;
+    color: #F0F5F1;
+}
+
+body.dark-theme input:focus,
+body.dark-theme select:focus,
+body.dark-theme textarea:focus {
+    border-color: #4CAF50;
+}
+
+/* Badges & Pills */
+body.dark-theme .filter-btn {
+    background: #1A241E;
+    color: #B0C4B5;
+    border-color: #2A3B30;
+}
+
+body.dark-theme .filter-btn:hover,
+body.dark-theme .filter-btn.active {
+    background: #2E7D32;
+    color: #ffffff;
+    border-color: #2E7D32;
+}
+
+body.dark-theme .badge {
+    background: rgba(76, 175, 80, 0.18);
+    color: #81C784;
+}
+
+/* Tables in Dark Mode */
+body.dark-theme table {
+    background: #1A241E;
+    border-color: #2A3B30;
+}
+
+body.dark-theme th {
+    background: #141C16;
+    color: #81C784;
+    border-bottom-color: #2A3B30;
+}
+
+body.dark-theme td {
+    border-bottom-color: #25362B;
+    color: #D2E3D6;
+}
+
+/* External Link Buttons & Secondary Controls */
+body.dark-theme .external-link-btn {
+    background: #141C16;
+    color: #81C784;
+    border-color: #2A3B30;
+}
+
+body.dark-theme .external-link-btn:hover {
+    background: #2E7D32;
+    color: #ffffff;
+}
+
+/* Footer in Dark Mode */
+body.dark-theme footer {
+    background: #0B120C;
+    border-top: 1px solid #1C2B1F;
+}
+
+/* Chatbot in Dark Mode */
+body.dark-theme .grow-chat-modal {
+    background: #162019;
+    border-color: #2A3B30;
+}
+
+body.dark-theme .grow-chat-body {
+    background: #111813;
+}
+
+body.dark-theme .bot-msg .chat-msg-bubble {
+    background: #1A241E;
+    color: #F0F5F1;
+    border-color: #2A3B30;
+}
+
+body.dark-theme .grow-chat-footer {
+    background: #162019;
+    border-top-color: #2A3B30;
+}
+
+body.dark-theme .grow-chat-footer input {
+    background: #111813;
+    border-color: #2A3B30;
+    color: #F0F5F1;
+}
+
+body.dark-theme .chat-prompt-chip {
+    background: #1A241E;
+    border-color: #2A3B30;
+    color: #81C784;
+}
+
+/* ==========================================
+   HIGH-CONTRAST DARK MODE TEXT VISIBILITY OVERRIDES
+========================================== */
+/* Force visibility on elements with hardcoded dark green/black colors */
+body.dark-theme [style*="color: #1b382b"],
+body.dark-theme [style*="color:#1b382b"],
+body.dark-theme [style*="color: #1B5E20"],
+body.dark-theme [style*="color:#1B5E20"],
+body.dark-theme [style*="color: #2D2D2D"],
+body.dark-theme [style*="color:#2D2D2D"],
+body.dark-theme [style*="color: #333333"],
+body.dark-theme [style*="color:#333333"],
+body.dark-theme [style*="color: #444"],
+body.dark-theme [style*="color:#444"],
+body.dark-theme [style*="color: #555"],
+body.dark-theme [style*="color:#555"],
+body.dark-theme [style*="color: #666"],
+body.dark-theme [style*="color:#666"],
+body.dark-theme [style*="color: #2E7D32"],
+body.dark-theme [style*="color:#2E7D32"] {
+    color: #F0F5F1 !important;
+}
+
+body.dark-theme [style*="background: #ffffff"],
+body.dark-theme [style*="background:#ffffff"],
+body.dark-theme [style*="background: #fff"],
+body.dark-theme [style*="background:#fff"],
+body.dark-theme [style*="background: #f8faf8"],
+body.dark-theme [style*="background:#f8faf8"],
+body.dark-theme [style*="background: #f4f9f5"],
+body.dark-theme [style*="background:#f4f9f5"],
+body.dark-theme [style*="background: #E8F5E9"],
+body.dark-theme [style*="background:#E8F5E9"] {
+    background: #1A241E !important;
+    border-color: #2A3B30 !important;
+}
+
+/* ALL Sections & Main Content Background in Dark Mode */
+body.dark-theme main,
+body.dark-theme section,
+body.dark-theme .managed-farms,
+body.dark-theme .stats,
+body.dark-theme .services,
+body.dark-theme .features,
+body.dark-theme .about-section,
+body.dark-theme .contact-section,
+body.dark-theme .section-padding,
+body.dark-theme .container {
+    background-color: #111813 !important;
+    background: #111813 !important;
+    color: #F0F5F1 !important;
+}
+
+/* ALL Section Headers, Section Tags & Subtitles in Dark Mode */
+body.dark-theme .section-header h2,
+body.dark-theme .section-title h2,
+body.dark-theme .managed-farms h2,
+body.dark-theme .section-header h2 span,
+body.dark-theme h1, body.dark-theme h2, body.dark-theme h3, body.dark-theme h4 {
+    color: #F0F5F1 !important;
+}
+
+body.dark-theme .section-header p,
+body.dark-theme .section-header .subtitle,
+body.dark-theme .section-title p,
+body.dark-theme .managed-farms p.subtitle,
+body.dark-theme .hero p,
+body.dark-theme p, body.dark-theme span {
+    color: #B0C4B5 !important;
+}
+
+body.dark-theme .section-tag,
+body.dark-theme .section-header .section-tag {
+    background: #1A241E !important;
+    color: #81C784 !important;
+    border: 1px solid #2A3B30 !important;
+}
+
+/* ALL Card & Box Containers Dark Mode Background & Text Overrides */
+body.dark-theme .service-card,
+body.dark-theme .stat-card,
+body.dark-theme .farm-card,
+body.dark-theme .crop-card,
+body.dark-theme .highlight-card,
+body.dark-theme .managed-farm-card,
+body.dark-theme .portal-card,
+body.dark-theme .scheme-card,
+body.dark-theme .weather-card,
+body.dark-theme .calc-card,
+body.dark-theme .modal-box,
+body.dark-theme .doctor-card,
+body.dark-theme .faq-item,
+body.dark-theme .crop-analysis-card,
+body.dark-theme .farm-metrics-bar,
+body.dark-theme .feature-card,
+body.dark-theme .contact-card,
+body.dark-theme .search-box,
+body.dark-theme .team-card,
+body.dark-theme .commitment-item,
+body.dark-theme .forecast-card,
+body.dark-theme .hourly-item,
+body.dark-theme .detail-box,
+body.dark-theme .diagnosis-card,
+body.dark-theme .summary-banner {
+    background: #1A241E !important;
+    border-color: #2A3B30 !important;
+    color: #F0F5F1 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Explicitly remove background, border, and shadow from inner text wrappers to eliminate dark shading boxes around font */
+body.dark-theme .metric-card-label,
+body.dark-theme .metric-card-val,
+body.dark-theme .metric-card-sub,
+body.dark-theme .price-hero-box,
+body.dark-theme .price-hero-unit,
+body.dark-theme .modal-price-large,
+body.dark-theme .crop-title-group,
+body.dark-theme .crop-header-wrapper,
+body.dark-theme .advisor-content,
+body.dark-theme .advisor-icon {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+body.dark-theme .farm-info,
+body.dark-theme .farm-metrics {
+    background: #1A241E !important;
+    border-color: #2A3B30 !important;
+}
+
+body.dark-theme .farm-title {
+    color: #F0F5F1 !important;
+}
+
+body.dark-theme .farm-desc,
+body.dark-theme .farm-meta,
+body.dark-theme .metric-lbl {
+    color: #B0C4B5 !important;
+}
+
+body.dark-theme .metric-val {
+    color: #81C784 !important;
+}
+
+body.dark-theme .service-card i,
+body.dark-theme .stat-card i,
+body.dark-theme .feature-card i {
+    color: #4CAF50 !important;
+}
+
+body.dark-theme .service-card h3,
+body.dark-theme .stat-card h2,
+body.dark-theme .crop-title,
+body.dark-theme .highlight-title,
+body.dark-theme .portal-title,
+body.dark-theme .scheme-title {
+    color: #F0F5F1 !important;
+}
+
+body.dark-theme .service-card p,
+body.dark-theme .stat-card p,
+body.dark-theme .crop-content p {
+    color: #B0C4B5 !important;
+}
+
+/* Dark Mode Search Box, Placeholders & Input Text */
+body.dark-theme .search-box,
+body.dark-theme .market-search-bar {
+    background: #1A241E !important;
+    border-color: #2A3B30 !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-theme .search-box input,
+body.dark-theme .market-search-bar input {
+    color: #FFFFFF !important;
+    background: transparent !important;
+}
+
+body.dark-theme input::placeholder,
+body.dark-theme textarea::placeholder,
+body.dark-theme .search-box input::placeholder,
+body.dark-theme .market-search-bar input::placeholder {
+    color: #A0B5A6 !important;
+    opacity: 1 !important;
+}
+
+/* Dark Mode Buttons High-Contrast Visibility */
+body.dark-theme .secondary-btn {
+    border-color: #66BB6A !important;
+    background: rgba(102, 187, 106, 0.15) !important;
+    color: #81C784 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.dark-theme .secondary-btn:hover {
+    background: #4CAF50 !important;
+    color: #111813 !important;
+    border-color: #4CAF50 !important;
+}
+
+body.dark-theme .primary-btn {
+    background: #2E7D32 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4) !important;
+}
+
+body.dark-theme .primary-btn:hover {
+    background: #388E3C !important;
+}
+
+/* Weather Page & City Chips Dark Mode Fixes */
+body.dark-theme .city-chip {
+    background: #1A241E !important;
+    border: 1px solid #2A3B30 !important;
+    color: #81C784 !important;
+}
+
+body.dark-theme .city-chip:hover,
+body.dark-theme .city-chip.active {
+    background: #2E7D32 !important;
+    color: #FFFFFF !important;
+    border-color: #2E7D32 !important;
+}
+
+body.dark-theme .weather-current-card {
+    background: linear-gradient(135deg, #142018, #1E2D23) !important;
+    border: 1px solid #2A3B30 !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-theme .weather-detail-item {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .weather-detail-item div div {
+    color: #B0C4B5 !important;
+    opacity: 1 !important;
+}
+
+body.dark-theme .weather-detail-item strong {
+    color: #FFFFFF !important;
+    font-size: 16px !important;
+}
+
+body.dark-theme #w-location {
+    background: rgba(255, 255, 255, 0.18) !important;
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .temp-large,
+body.dark-theme #w-condition,
+body.dark-theme #w-temp {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme #w-updated {
+    color: #B0C4B5 !important;
+}
+
+/* Crop Doctor Page Dark Mode Fixes */
+body.dark-theme .upload-panel,
+body.dark-theme .results-panel,
+body.dark-theme .doctor-layout > div {
+    background: #1A241E !important;
+    border-color: #2A3B30 !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-theme .drop-zone {
+    background: #141C16 !important;
+    border: 2.5px dashed #2E7D32 !important;
+}
+
+body.dark-theme .drop-zone:hover,
+body.dark-theme .drop-zone.drag-over {
+    background: #1E2D23 !important;
+    border-color: #4CAF50 !important;
+}
+
+body.dark-theme .drop-zone h4 {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .drop-zone p {
+    color: #A0B5A6 !important;
+}
+
+body.dark-theme .step-label {
+    color: #81C784 !important;
+}
+
+body.dark-theme .capture-btn {
+    background: #141C16 !important;
+    border-color: #2A3B30 !important;
+    color: #81C784 !important;
+}
+
+body.dark-theme .capture-btn:hover {
+    background: #2E7D32 !important;
+    color: #FFFFFF !important;
+    border-color: #2E7D32 !important;
+}
+
+body.dark-theme .symptom-tag,
+body.dark-theme .symptom-chip,
+body.dark-theme .sym-tag {
+    background: #141C16 !important;
+    border: 1.5px solid #2A3B30 !important;
+    color: #81C784 !important;
+}
+
+body.dark-theme .symptom-tag:hover,
+body.dark-theme .symptom-tag.selected,
+body.dark-theme .symptom-chip.active,
+body.dark-theme .sym-tag:hover,
+body.dark-theme .sym-tag.selected {
+    background: #2E7D32 !important;
+    color: #FFFFFF !important;
+    border-color: #2E7D32 !important;
+}
+
+body.dark-theme select option {
+    background: #1A241E !important;
+    color: #F0F5F1 !important;
+}
+
+/* Market Page & Crop Chips Dark Mode Fixes */
+body.dark-theme .crop-chip {
+    background: #1A241E !important;
+    border: 1.5px solid #2A3B30 !important;
+    color: #81C784 !important;
+}
+
+body.dark-theme .crop-chip:hover,
+body.dark-theme .crop-chip.active {
+    background: #2E7D32 !important;
+    color: #FFFFFF !important;
+    border-color: #2E7D32 !important;
+}
+
+body.dark-theme .highlight-card {
+    background: #1A241E !important;
+    border-color: #2A3B30 !important;
+}
+
+body.dark-theme .highlight-body h3,
+body.dark-theme .highlight-amount {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .highlight-price-val {
+    color: #81C784 !important;
+}
+
+body.dark-theme .highlight-price-unit,
+body.dark-theme .highlight-unit,
+body.dark-theme .highlight-footer-meta {
+    color: #B0C4B5 !important;
+}
+
+body.dark-theme .gain-card .highlight-badge-tag {
+    background: rgba(46, 125, 50, 0.25) !important;
+    color: #81C784 !important;
+    border: 1px solid rgba(76, 175, 80, 0.4) !important;
+}
+
+body.dark-theme .drop-card .highlight-badge-tag {
+    background: rgba(211, 47, 47, 0.25) !important;
+    color: #FF8A80 !important;
+    border: 1px solid rgba(255, 82, 82, 0.4) !important;
+}
+
+body.dark-theme .volume-card .highlight-badge-tag {
+    background: rgba(245, 124, 0, 0.25) !important;
+    color: #FFB74D !important;
+    border: 1px solid rgba(255, 183, 77, 0.4) !important;
+}
+
+body.dark-theme .gain-card .highlight-icon-circle {
+    background: rgba(46, 125, 50, 0.3) !important;
+    color: #81C784 !important;
+    border: 1px solid rgba(76, 175, 80, 0.3) !important;
+}
+
+body.dark-theme .drop-card .highlight-icon-circle {
+    background: rgba(211, 47, 47, 0.3) !important;
+    color: #FF8A80 !important;
+    border: 1px solid rgba(255, 82, 82, 0.3) !important;
+}
+
+body.dark-theme .volume-card .highlight-icon-circle {
+    background: rgba(245, 124, 0, 0.3) !important;
+    color: #FFB74D !important;
+    border: 1px solid rgba(255, 183, 77, 0.3) !important;
+}
+
+body.dark-theme .stat-pill,
+body.dark-theme .stat-pill.gain {
+    background: rgba(46, 125, 50, 0.25) !important;
+    color: #81C784 !important;
+    border: 1px solid rgba(76, 175, 80, 0.3) !important;
+}
+
+body.dark-theme .stat-pill.drop {
+    background: rgba(211, 47, 47, 0.25) !important;
+    color: #FF8A80 !important;
+    border: 1px solid rgba(255, 82, 82, 0.3) !important;
+}
+
+body.dark-theme .stat-pill.volume {
+    background: rgba(245, 124, 0, 0.25) !important;
+    color: #FFB74D !important;
+    border: 1px solid rgba(255, 183, 77, 0.3) !important;
+}
+
+/* Crop Analysis Dashboard Dark Mode Overrides */
+body.dark-theme .modal-price-large {
+    color: #81C784 !important;
+}
+
+body.dark-theme .price-hero-unit,
+body.dark-theme .crop-title-group div,
+body.dark-theme .metric-card-sub,
+body.dark-theme .trend-bar-label {
+    color: #B0C4B5 !important;
+}
+
+body.dark-theme .metric-card {
+    background: #141C16 !important;
+    border: 1px solid #2A3B30 !important;
+    box-shadow: none !important;
+}
+
+body.dark-theme .metric-card-label {
+    color: #81C784 !important;
+}
+
+body.dark-theme .metric-card-val {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .trend-section-box {
+    background: #141C16 !important;
+    border: 1px solid #2A3B30 !important;
+}
+
+body.dark-theme .trend-section-box h4 {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .trend-bar-tooltip {
+    background: #1A241E !important;
+    color: #81C784 !important;
+    border: 1px solid #2A3B30 !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-theme .advisor-box {
+    background: linear-gradient(135deg, #142018, #1E2D23) !important;
+    border-left: 5px solid #4CAF50 !important;
+    border-top: 1px solid #2A3B30 !important;
+    border-right: 1px solid #2A3B30 !important;
+    border-bottom: 1px solid #2A3B30 !important;
+}
+
+body.dark-theme .advisor-content h4 {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .advisor-content p {
+    color: #D2E3D6 !important;
+}
+
+body.dark-theme .crop-category-badge {
+    background: #141C16 !important;
+    border: 1px solid #2A3B30 !important;
+    color: #81C784 !important;
+}
+
+/* Mandi Table Variety & Modal Rate Styling */
+.variety-badge {
+    background: #eef7f0;
+    color: #2E7D32;
+    padding: 3px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.mandi-modal-rate {
+    font-family: 'Poppins', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #1b382b;
+}
+
+body.dark-theme .variety-badge {
+    background: #141C16 !important;
+    color: #81C784 !important;
+    border: 1px solid #2A3B30 !important;
+}
+
+body.dark-theme .mandi-modal-rate {
+    color: #81C784 !important;
+}
+
+body.dark-theme .market-table-container {
+    background: #1A241E !important;
+    border: 1px solid #2A3B30 !important;
+}
+
+body.dark-theme .market-table th {
+    background: #141C16 !important;
+    color: #81C784 !important;
+    border-bottom: 2px solid #2A3B30 !important;
+}
+
+body.dark-theme .market-table td {
+    color: #F0F5F1 !important;
+    border-bottom: 1px solid #25362B !important;
+}
+
+body.dark-theme .market-table td strong {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .market-table tbody tr:hover {
+    background: #1E2D23 !important;
+}
+
+body.dark-theme .price-change-pill.price-up,
+body.dark-theme .price-up {
+    background: rgba(46, 125, 50, 0.25) !important;
+    color: #81C784 !important;
+    border: 1px solid rgba(76, 175, 80, 0.3) !important;
+}
+
+body.dark-theme .price-change-pill.price-down,
+body.dark-theme .price-down {
+    background: rgba(211, 47, 47, 0.25) !important;
+    color: #FF8A80 !important;
+    border: 1px solid rgba(255, 82, 82, 0.3) !important;
+}
+
+/* Learning Hub & Schemes Top Banner Image Placeholder Dark Mode Fixes */
+body.dark-theme .crop-image-placeholder {
+    background: #141C16 !important;
+    border-bottom: 1px solid #2A3B30 !important;
+    color: #81C784 !important;
+}
+
+body.dark-theme .crop-image-placeholder i {
+    color: #81C784 !important;
+}
+
+body.dark-theme .crop-card {
+    background: #1A241E !important;
+    border: 1px solid #2A3B30 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-theme .crop-tag {
+    color: #81C784 !important;
+    background: #141C16 !important;
+    border: 1px solid #2A3B30 !important;
+}
+
+body.dark-theme .crop-title {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .crop-content p {
+    color: #B0C4B5 !important;
+}
+
+body.dark-theme #article-modal-body .badge {
+    background: #141C16 !important;
+    color: #81C784 !important;
+    border: 1px solid #2A3B30 !important;
+}
+
+/* Contact Page Icon Circle & Link Styling */
+.contact-icon-circle {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 22px;
+    transition: all 0.25s ease;
+}
+
+.phone-circle { background: #E8F5E9; color: #2E7D32; }
+.wa-circle { background: #E8F5E9; color: #2E7D32; }
+.mail-circle { background: #E3F2FD; color: #1565C0; }
+
+.contact-link-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2E7D32;
+    text-decoration: none;
+    transition: color 0.25s ease;
+}
+
+body.dark-theme .contact-icon-circle.phone-circle,
+body.dark-theme .contact-icon-circle.wa-circle {
+    background: rgba(46, 125, 50, 0.25) !important;
+    color: #81C784 !important;
+    border: 1px solid rgba(76, 175, 80, 0.3) !important;
+}
+
+body.dark-theme .contact-icon-circle.mail-circle {
+    background: rgba(33, 150, 243, 0.25) !important;
+    color: #90CAF9 !important;
+    border: 1px solid rgba(144, 202, 249, 0.3) !important;
+}
+
+body.dark-theme .contact-link-val {
+    color: #81C784 !important;
+}
+
+body.dark-theme .contact-link-val.mail-link {
+    color: #90CAF9 !important;
+}
+
+/* ALL Form Controls, Inputs, Selects, Textareas & Autofill in Dark Mode */
+body.dark-theme input,
+body.dark-theme textarea,
+body.dark-theme select,
+body.dark-theme .form-control,
+body.dark-theme input[type="text"],
+body.dark-theme input[type="tel"],
+body.dark-theme input[type="email"],
+body.dark-theme input[type="number"],
+body.dark-theme input[type="search"] {
+    background-color: #141C16 !important;
+    background: #141C16 !important;
+    border: 1px solid #2A3B30 !important;
+    color: #FFFFFF !important;
+}
+
+body.dark-theme input:-webkit-autofill,
+body.dark-theme input:-webkit-autofill:hover,
+body.dark-theme input:-webkit-autofill:focus,
+body.dark-theme textarea:-webkit-autofill,
+body.dark-theme select:-webkit-autofill {
+    -webkit-text-fill-color: #FFFFFF !important;
+    -webkit-box-shadow: 0 0 0px 1000px #141C16 inset !important;
+    transition: background-color 5000s ease-in-out 0s !important;
+}
+
+body.dark-theme input:focus,
+body.dark-theme textarea:focus,
+body.dark-theme select:focus,
+body.dark-theme .form-control:focus {
+    border-color: #4CAF50 !important;
+    background-color: #1E2D23 !important;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.25) !important;
+}
+
+/* All Form Labels in Dark Mode */
+body.dark-theme label,
+body.dark-theme .form-group label {
+    color: #81C784 !important;
+    font-weight: 600 !important;
+}
+
+/* Farm Cards & Metric Boxes Dark Mode Fixes */
+body.dark-theme .farm-card {
+    background: #1A241E !important;
+    border: 1px solid #2A3B30 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-theme .farm-info {
+    background: #1A241E !important;
+}
+
+body.dark-theme .farm-meta {
+    color: #81C784 !important;
+    font-weight: 600 !important;
+}
+
+body.dark-theme .farm-title {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .farm-desc {
+    color: #B0C4B5 !important;
+}
+
+body.dark-theme .farm-metrics {
+    border-top: 1px solid #25362B !important;
+}
+
+body.dark-theme .metric-box {
+    background: #141C16 !important;
+    border: 1px solid #2A3B30 !important;
+}
+
+body.dark-theme .metric-val {
+    color: #81C784 !important;
+}
+
+body.dark-theme .metric-lbl {
+    color: #B0C4B5 !important;
+    font-weight: 600 !important;
+}
+
+/* Fix Search Box input inner background & border in Dark Mode */
+body.dark-theme .search-box input,
+body.dark-theme .market-search-bar input,
+body.dark-theme .weather-search-bar input {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .search-box {
+    background: #141C16 !important;
+    border: 1.5px solid #2A3B30 !important;
+    border-radius: 50px !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-theme .search-box input::placeholder {
+    color: #B0C4B5 !important;
+    opacity: 1 !important;
+}
+
+/* Secondary Button High-Contrast Styling */
+body.dark-theme .secondary-btn {
+    border: 2px solid #4CAF50 !important;
+    background: rgba(76, 175, 80, 0.18) !important;
+    color: #81C784 !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-theme .secondary-btn:hover {
+    background: #4CAF50 !important;
+    color: #111813 !important;
+    border-color: #4CAF50 !important;
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4) !important;
 }

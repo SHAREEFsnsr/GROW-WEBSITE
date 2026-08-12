@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yield & Profit Calculator | GROW</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="ASSISTS/LOGO/LOGO (2).PNG" alt="GROW Logo">
+                </a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="yield-calculator.html" class="active">Yield Calculator</a></li>
+                <li><a href="weather.html">Weather</a></li>
+                <li><a href="crop-doctor.html">Crop Doctor</a></li>
+                <li><a href="market.html">Market</a></li>
+                <li><a href="learning.html">Learning</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- PAGE HEADER -->
+        <section class="page-header">
+            <div class="page-header-content">
+                <h1>Smart Yield & Profit Estimator</h1>
+                <p>Calculate your expected crop output, gross income, input expenses, and net profit before sowing.</p>
+            </div>
+        </section>
+
+        <!-- CALCULATOR CONTENT -->
+        <section class="container section-padding">
+            <div class="calculator-wrapper">
+                
+                <!-- Input Form Card -->
+                <div class="calc-card">
+                    <h2 style="font-family:'Poppins', sans-serif; font-size: 24px; margin-bottom: 24px; color: var(--primary-dark);">
+                        <i class="fa-solid fa-sliders" style="color: var(--primary-color);"></i> Input Farm Parameters
+                    </h2>
+
+                    <form id="yield-form" onsubmit="event.preventDefault(); calculateYield();">
+                        <div class="form-group">
+                            <label for="crop-type"><i class="fa-solid fa-wheat-awn"></i> Select Crop</label>
+                            <select id="crop-type" class="form-control" onchange="calculateYield()">
+                                <option value="wheat">Wheat (Gehun)</option>
+                                <option value="rice" selected>Rice / Paddy (Dhan)</option>
+                                <option value="maize">Maize / Corn (Makka)</option>
+                                <option value="cotton">Cotton (Kapas)</option>
+                                <option value="sugarcane">Sugarcane (Ganna)</option>
+                                <option value="soybean">Soybean</option>
+                                <option value="potato">Potato (Aloo)</option>
+                                <option value="mustard">Mustard (Sarson)</option>
+                            </select>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label for="land-area"><i class="fa-solid fa-vector-square"></i> Land Area</label>
+                                <input type="number" id="land-area" class="form-control" value="5" min="0.5" step="0.5" oninput="calculateYield()">
+                            </div>
+                            <div class="form-group">
+                                <label for="area-unit"><i class="fa-solid fa-ruler-combined"></i> Unit</label>
+                                <select id="area-unit" class="form-control" onchange="calculateYield()">
+                                    <option value="acre" selected>Acres</option>
+                                    <option value="hectare">Hectares</option>
+                                    <option value="bigha">Bigha</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="soil-quality"><i class="fa-solid fa-mound"></i> Soil Fertility Grade</label>
+                            <select id="soil-quality" class="form-control" onchange="calculateYield()">
+                                <option value="high" selected>High Fertility (Loamy / Alluvial)</option>
+                                <option value="medium">Medium Fertility (Black / Clay)</option>
+                                <option value="low">Low Fertility (Sandy / Red)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="irrigation-type"><i class="fa-solid fa-droplet"></i> Irrigation Facilities</label>
+                            <select id="irrigation-type" class="form-control" onchange="calculateYield()">
+                                <option value="drip" selected>Drip / Micro-Irrigation (Optimal)</option>
+                                <option value="canal">Canal / Borewell Flood Irrigation</option>
+                                <option value="rainfed">Rain-fed (Monsoon Dependent)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="expected-price"><i class="fa-solid fa-indian-rupee-sign"></i> Expected Price per Quintal (₹)</label>
+                            <input type="number" id="expected-price" class="form-control" value="2300" oninput="calculateYield()">
+                        </div>
+
+                        <button type="submit" class="primary-btn" style="width: 100%; justify-content: center; margin-top: 10px;">
+                            <i class="fa-solid fa-calculator"></i> calculate Projection
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Result Card -->
+                <div class="calc-result-card">
+                    <h3><i class="fa-solid fa-chart-pie"></i> Projected Output Summary</h3>
+                    
+                    <div class="result-item">
+                        <label>Estimated Total Yield</label>
+                        <div class="value" id="res-yield">115 Quintals</div>
+                        <span style="font-size: 13px; opacity: 0.8;" id="res-yield-sub">~ 23 Quintals per acre</span>
+                    </div>
+
+                    <div class="result-item">
+                        <label>Estimated Gross Revenue</label>
+                        <div class="value" id="res-revenue" style="color: #A5D6A7;">₹ 2,64,500</div>
+                    </div>
+
+                    <div class="result-grid-mini">
+                        <div class="result-item">
+                            <label>Estimated Expenses</label>
+                            <div class="value" id="res-expenses" style="font-size: 20px; color: #FFCDD2;">₹ 78,000</div>
+                        </div>
+                        <div class="result-item">
+                            <label>Net Profit</label>
+                            <div class="value" id="res-profit" style="font-size: 20px; color: #FFF59D;">₹ 1,86,500</div>
+                        </div>
+                    </div>
+
+                    <div style="background: rgba(0,0,0,0.15); padding: 18px; border-radius: var(--radius-md); margin-top: 20px; font-size: 14px; line-height: 1.6;">
+                        <i class="fa-solid fa-circle-info" style="color: #A5D6A7;"></i> <strong>Agronomist Tip:</strong> <span id="res-tip">Using drip irrigation with balanced NPK fertilizer can increase paddy yield by up to 18%.</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <h3>#GROW</h3>
+        <p>LET YOUR KNOWLEDGE YIELD A BETTER FUTURE</p>
+        <p>© 2026 GROW. All Rights Reserved.</p>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        const cropData = {
+            wheat: { baseYield: 18, price: 2275, costPerAcre: 14000, tip: "Optimum sowing time for wheat is mid-November. Use certified HD-3086 or DBW-187 seeds." },
+            rice: { baseYield: 23, price: 2300, costPerAcre: 15600, tip: "Maintain 2-3 cm water level during tillering stage for maximum panicle formation." },
+            maize: { baseYield: 25, price: 2090, costPerAcre: 13500, tip: "Maize is highly responsive to Nitrogen. Apply N in 3 split doses at sowing, knee-high, and silking stages." },
+            cotton: { baseYield: 10, price: 7120, costPerAcre: 22000, tip: "Monitor for Pink Bollworm from 45 days after sowing using pheromone traps." },
+            sugarcane: { baseYield: 350, price: 315, costPerAcre: 45000, tip: "Adopt trench planting method with 4-5 feet row spacing to save water and increase tiller count." },
+            soybean: { baseYield: 9, price: 4600, costPerAcre: 11000, tip: "Treat seeds with Rhizobium culture before sowing to fix atmospheric nitrogen naturally." },
+            potato: { baseYield: 110, price: 1400, costPerAcre: 35000, tip: "Ensure earthing up is done 30 days after planting to promote tuber development and avoid greening." },
+            mustard: { baseYield: 8, price: 5650, costPerAcre: 9500, tip: "Two light irrigations (at flowering and pod formation) increase oil content by 4-5%." }
+        };
+
+        function calculateYield() {
+            const cropKey = document.getElementById('crop-type').value;
+            const area = parseFloat(document.getElementById('land-area').value) || 1;
+            const unit = document.getElementById('area-unit').value;
+            const soil = document.getElementById('soil-quality').value;
+            const irrigation = document.getElementById('irrigation-type').value;
+            let price = parseFloat(document.getElementById('expected-price').value);
+
+            const cropInfo = cropData[cropKey];
+            if (!price || price <= 0) price = cropInfo.price;
+
+            // Convert area to Acres
+            let acres = area;
+            if (unit === 'hectare') acres = area * 2.471;
+            if (unit === 'bigha') acres = area * 0.62;
+
+            // Multipliers
+            let soilMult = 1.0;
+            if (soil === 'high') soilMult = 1.15;
+            if (soil === 'low') soilMult = 0.82;
+
+            let irrMult = 1.0;
+            if (irrigation === 'drip') irrMult = 1.12;
+            if (irrigation === 'rainfed') irrMult = 0.75;
+
+            const yieldPerAcre = (cropInfo.baseYield * soilMult * irrMult).toFixed(1);
+            const totalYield = Math.round(yieldPerAcre * acres);
+            const grossRevenue = totalYield * price;
+            const totalExpenses = Math.round(cropInfo.costPerAcre * acres * (irrigation === 'drip' ? 1.08 : 1.0));
+            const netProfit = grossRevenue - totalExpenses;
+
+            // Update UI
+            document.getElementById('res-yield').textContent = `${totalYield.toLocaleString()} Quintals`;
+            document.getElementById('res-yield-sub').textContent = `~ ${yieldPerAcre} Quintals per acre`;
+            document.getElementById('res-revenue').textContent = `₹ ${grossRevenue.toLocaleString()}`;
+            document.getElementById('res-expenses').textContent = `₹ ${totalExpenses.toLocaleString()}`;
+            document.getElementById('res-profit').textContent = `₹ ${netProfit.toLocaleString()}`;
+            document.getElementById('res-tip').textContent = cropInfo.tip;
+        }
+
+        document.addEventListener('DOMContentLoaded', calculateYield);
+    </script>
+</body>
+</html>
+

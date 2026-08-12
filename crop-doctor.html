@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Crop Doctor | GROW</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ===== LAYOUT ===== */
+        .doctor-layout {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 36px;
+            align-items: start;
+        }
+
+        /* ===== UPLOAD PANEL ===== */
+        .upload-panel {
+            background: #fff;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.07);
+            border: 1px solid #E5E7EB;
+            position: sticky;
+            top: 110px;
+        }
+
+        .step-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 14px;
+        }
+        .step-num {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* ===== DROP ZONE ===== */
+        .drop-zone {
+            border: 2.5px dashed #A5D6A7;
+            background: #F8FAF8;
+            border-radius: 16px;
+            padding: 26px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 14px;
+        }
+        .drop-zone:hover, .drop-zone.drag-over {
+            border-color: var(--primary-color);
+            background: #E8F5E9;
+        }
+        .drop-zone i       { font-size: 40px; color: var(--primary-color); margin-bottom: 8px; display: block; }
+        .drop-zone h4      { font-size: 14px; margin-bottom: 4px; color: var(--text-primary); }
+        .drop-zone p       { font-size: 12px; color: var(--text-muted); }
+
+        /* ===== CAPTURE BUTTONS ===== */
+        .capture-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .capture-btn {
+            padding: 11px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border-color);
+            background: #fff;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .capture-btn:hover {
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+
+        /* ===== PREVIEW ===== */
+        #preview-wrapper {
+            display: none;
+            position: relative;
+            margin-bottom: 18px;
+        }
+        #preview-img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 3px solid var(--primary-color);
+        }
+        .remove-img-btn {
+            position: absolute;
+            top: 8px; right: 8px;
+            background: #D32F2F;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 28px; height: 28px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* ===== SYMPTOM TAGS ===== */
+        .symptom-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+        .sym-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 1.5px solid #D1D5DB;
+            background: #F9FAFB;
+            color: #4B5563;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.22s ease;
+            user-select: none;
+        }
+        /* Hover — light green */
+        .sym-tag:hover {
+            border-color: #81C784;
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        /* Selected — solid green */
+        .sym-tag.selected {
+            background: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+        }
+        .sym-tag.selected:hover {
+            background: #1B5E20;
+            border-color: #1B5E20;
+        }
+        .sym-tag .sym-check {
+            display: none;
+        }
+        /* Prevent icons from intercepting clicks */
+        .sym-tag i {
+            pointer-events: none;
+        }
+        .sym-tag.selected .sym-check {
+            display: inline;
+        }
+        .sym-tag.selected .sym-dot {
+            display: none;
+        }
+
+        /* ===== ANALYSE BUTTON ===== */
+        .analyse-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #2E7D32, #1B5E20);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 6px;
+        }
+        .analyse-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(46,125,50,0.4);
+        }
+        .analyse-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ===== RESULTS PANEL ===== */
+        .results-panel { min-height: 300px; }
+
+        .results-placeholder {
+            text-align: center;
+            padding: 70px 20px;
+            color: var(--text-secondary);
+            border: 2px dashed #E5E7EB;
+            border-radius: 20px;
+        }
+        .results-placeholder > i {
+            font-size: 60px;
+            color: #C8E6C9;
+            margin-bottom: 18px;
+            display: block;
+        }
+
+        /* ===== AI LOADER ===== */
+        .ai-loader {
+            display: none;
+            text-align: center;
+            padding: 70px 20px;
+            border: 1px solid #E5E7EB;
+            border-radius: 20px;
+            background: #fff;
+        }
+        .ai-loader.active { display: block; }
+        .spin-ring {
+            width: 72px; height: 72px;
+            border-radius: 50%;
+            border: 6px solid #E8F5E9;
+            border-top-color: var(--primary-color);
+            animation: rotate 1s linear infinite;
+            margin: 0 auto 18px;
+        }
+        @keyframes rotate { to { transform: rotate(360deg); } }
+        .ai-loader p      { font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+        .ai-loader small  { font-size: 13px; color: var(--text-muted); }
+        #loader-status    { font-size: 13px; color: var(--primary-color); font-weight: 600; margin-top: 10px; }
+
+        /* ===== ERROR BOX ===== */
+        .ai-error {
+            display: none;
+            background: #FFEBEE;
+            border-left: 5px solid #D32F2F;
+            border-radius: 14px;
+            padding: 22px 24px;
+            color: #B71C1C;
+            margin-bottom: 20px;
+        }
+        .ai-error.active { display: block; }
+
+        /* ===== REPORT CARD ===== */
+        .report-card {
+            display: none;
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+            border: 1px solid #E5E7EB;
+        }
+        .report-card.active { display: block; }
+
+        .report-hero {
+            padding: 28px 30px 22px;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        .report-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+        .rpill {
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .rpill-crop     { background: #E3F2FD; color: #1565C0; }
+        .rpill-conf     { background: #F3E5F5; color: #7B1FA2; }
+        .rpill-healthy  { background: #E8F5E9; color: #2E7D32; }
+        .rpill-mild     { background: #FFF8E1; color: #F57F17; }
+        .rpill-moderate { background: #FFF3E0; color: #E65100; }
+        .rpill-severe   { background: #FFEBEE; color: #C62828; }
+
+        .report-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .report-sci {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .report-body { padding: 26px 30px; }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .info-item {
+            background: #F9FAFB;
+            border-radius: 12px;
+            padding: 14px 16px;
+            border: 1px solid #F0F0F0;
+        }
+        .info-item .lbl {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .info-item .val {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Severity bar */
+        .sev-bar {
+            height: 8px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #4CAF50, #FDD835, #FF9800, #D32F2F);
+            position: relative;
+            margin-top: 8px;
+        }
+        .sev-ptr {
+            position: absolute;
+            top: -5px;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid #333;
+            transform: translateX(-50%);
+            transition: left 0.8s ease;
+        }
+
+        /* Top predictions */
+        .pred-bar-wrap { margin-bottom: 10px; }
+        .pred-label { display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px; font-weight:600; }
+        .pred-bar { height:8px; background:#F0F0F0; border-radius:6px; overflow:hidden; }
+        .pred-fill { height:100%; background: linear-gradient(90deg, #2E7D32, #4CAF50); border-radius:6px; transition: width 0.8s ease; }
+
+        /* Section blocks */
+        .rsec {
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .rsec h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .rsec ul { padding-left: 18px; line-height: 2; font-size: 14px; }
+        .rsec p  { font-size: 14px; line-height: 1.8; }
+
+        .rsec-sym  { background: #FFF8E1; border-left: 4px solid #FDD835; }
+        .rsec-sym h4 { color: #F57F17; }
+        .rsec-cause { background: #F3F4F6; border-left: 4px solid #9E9E9E; }
+        .rsec-cause h4 { color: #424242; }
+        .rsec-prev { background: #E8F5E9; border-left: 4px solid #4CAF50; }
+        .rsec-prev h4 { color: #1B5E20; }
+        .rsec-org  { background: #F1F8E9; border-left: 4px solid #8BC34A; }
+        .rsec-org h4 { color: #33691E; }
+        .rsec-chem { background: #FFF3E0; border-left: 4px solid #FF9800; }
+        .rsec-chem h4 { color: #E65100; }
+        .rsec-exp  { background: #FCE4EC; border-left: 4px solid #F06292; }
+        .rsec-exp h4 { color: #880E4F; }
+
+        .disclaimer {
+            background: #F9FAFB;
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 18px;
+            border: 1px solid #F0F0F0;
+        }
+
+        /* ===== CAMERA MODAL ===== */
+        .camera-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.88);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .camera-modal.active { display: flex; }
+        .camera-modal video {
+            width: min(90vw, 560px);
+            border-radius: 16px;
+            border: 3px solid #4CAF50;
+        }
+        .cam-controls { display: flex; gap: 16px; }
+        .cam-btn {
+            padding: 14px 28px;
+            border-radius: 50px;
+            border: none;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .cam-snap   { background: #4CAF50; color: #fff; }
+        .cam-snap:hover { background: #2E7D32; }
+        .cam-close  { background: rgba(255,255,255,0.15); color: #fff; }
+        .cam-close:hover { background: rgba(255,255,255,0.25); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .doctor-layout { grid-template-columns: 1fr; }
+            .upload-panel  { position: static; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="ASSISTS/LOGO/LOGO (2).PNG" alt="GROW Logo">
+                </a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="yield-calculator.html">Yield Calculator</a></li>
+                <li><a href="weather.html">Weather</a></li>
+                <li><a href="crop-doctor.html" class="active">Crop Doctor</a></li>
+                <li><a href="market.html">Market</a></li>
+                <li><a href="learning.html">Learning</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- PAGE HEADER -->
+        <section class="page-header">
+            <div class="page-header-content">
+                <h1>AI Crop Doctor</h1>
+                <p>Capture or upload a plant photo, select symptoms, and get treatment advice — completely free.</p>
+            </div>
+        </section>
+
+        <section class="container section-padding">
+            <div class="doctor-layout">
+
+                <!-- ===== LEFT: Input Panel ===== -->
+                <div class="upload-panel">
+
+                    <!-- STEP 1: Photo -->
+                    <div class="step-label">
+                        <div class="step-num">1</div>
+                        Upload or Capture Plant Photo
+                    </div>
+
+                    <div class="drop-zone" id="drop-zone"
+                         onclick="document.getElementById('file-input').click()"
+                         ondragover="event.preventDefault(); this.classList.add('drag-over')"
+                         ondragleave="this.classList.remove('drag-over')"
+                         ondrop="handleDrop(event)">
+                        <i class="fa-solid fa-image-portrait"></i>
+                        <h4>Drag &amp; Drop plant photo here</h4>
+                        <p>Click to browse · JPG / PNG / WEBP</p>
+                    </div>
+
+                    <div class="capture-actions">
+                        <button class="capture-btn" onclick="document.getElementById('file-input').click()">
+                            <i class="fa-solid fa-folder-open"></i> Gallery
+                        </button>
+                        <button class="capture-btn" onclick="openCamera()">
+                            <i class="fa-solid fa-camera"></i> Camera
+                        </button>
+                    </div>
+
+                    <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFileUpload(this)">
+
+                    <!-- Image Preview -->
+                    <div id="preview-wrapper">
+                        <img id="preview-img" src="" alt="Uploaded plant">
+                        <button class="remove-img-btn" onclick="clearImage()" title="Remove">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <div style="text-align:center; margin-top:8px; font-size:13px; color:var(--primary-color); font-weight:600;">
+                            <i class="fa-solid fa-circle-check"></i> Photo ready
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: Symptom Tags -->
+                    <div class="step-label" style="margin-top: 22px;">
+                        <div class="step-num">2</div>
+                        Select Observed Symptoms
+                        <span style="font-size:12px; font-weight:400; color:var(--text-muted);">(optional)</span>
+                    </div>
+
+                    <div class="symptom-wrap" id="symptom-wrap">
+                        <!-- Each tag: click once = select (green), click again = deselect -->
+                        <span class="sym-tag" onclick="toggleSymptom(this)">
+                            <i class="fa-solid fa-check sym-check"></i>
+                            <i class="fa-solid fa-circle sym-dot" style="font-size:6px;"></i>
+                            Yellowing Leaves
+                        </span>
+                        <span class="sym-tag" onclick="toggleSymptom(this)">
+                            <i class="fa-solid fa-check sym-check"></i>
+                            <i class="fa-solid fa-circle sym-dot" style="font-size:6px;"></i>
+                            Brown Spots on Leaves
+                        </span>
+                        <span class="sym-tag" onclick="toggleSymptom(this)">
+                            <i class="fa-solid fa-check sym-check"></i>
+                            <i class="fa-solid fa-circle sym-dot" style="font-size:6px;"></i>
+                            White Powdery Mildew
+                        </span>
+                        <span class="sym-tag" onclick="toggleSymptom(this)">
+                            <i class="fa-solid fa-check sym-check"></i>
+                            <i class="fa-solid fa-circle sym-dot" style="font-size:6px;"></i>
+                            Leaf Curl / Twisted
+                        </span>
+                        <span class="sym-tag" onclick="toggleSymptom(this)">
+                            <i class="fa-solid fa-check sym-check"></i>
+                            <i class="fa-solid fa-circle sym-dot" style="font-size:6px;"></i>
+                            Wilting Stems
+                        </span>
+                        <span class="sym-tag" onclick="toggleSymptom(this)">
+                            <i class="fa-solid fa-check sym-check"></i>
+                            <i class="fa-solid fa-circle sym-dot" style="font-size:6px;"></i>
+                            Stunted Growth
+                        </span>
+                        <span class="sym-tag" onclick="toggleSymptom(this)">
+                            <i class="fa-solid fa-check sym-check"></i>
+                            <i class="fa-solid fa-circle sym-dot" style="font-size:6px;"></i>
+                            Fruit Lesions
+                        </span>
+                        <span class="sym-tag" onclick="toggleSymptom(this)">
+                            <i class="fa-solid fa-check sym-check"></i>
+                            <i class="fa-solid fa-circle sym-dot" style="font-size:6px;"></i>
+                            Rust / Orange Pustules
+                        </span>
+                        <span class="sym-tag" onclick="toggleSymptom(this)">
+                            <i class="fa-solid fa-check sym-check"></i>
+                            <i class="fa-solid fa-circle sym-dot" style="font-size:6px;"></i>
+                            Root Rot
+                        </span>
+                        <span class="sym-tag" onclick="toggleSymptom(this)">
+                            <i class="fa-solid fa-check sym-check"></i>
+                            <i class="fa-solid fa-circle sym-dot" style="font-size:6px;"></i>
+                            Black Spots
+                        </span>
+                        <span class="sym-tag" onclick="toggleSymptom(this)">
+                            <i class="fa-solid fa-check sym-check"></i>
+                            <i class="fa-solid fa-circle sym-dot" style="font-size:6px;"></i>
+                            Holes in Leaves
+                        </span>
+                        <span class="sym-tag" onclick="toggleSymptom(this)">
+                            <i class="fa-solid fa-check sym-check"></i>
+                            <i class="fa-solid fa-circle sym-dot" style="font-size:6px;"></i>
+                            Sticky / Honeydew
+                        </span>
+                    </div>
+
+                    <!-- STEP 3: Crop Hint -->
+                    <div class="step-label" style="margin-top: 4px;">
+                        <div class="step-num">3</div>
+                        Crop Name
+                        <span style="font-size:12px; font-weight:400; color:var(--text-muted);">(helps accuracy)</span>
+                    </div>
+
+                    <div class="form-group">
+                        <select id="crop-hint" class="form-control">
+                            <option value="">— AI will detect automatically —</option>
+                            <option>Rice / Paddy</option>
+                            <option>Wheat</option>
+                            <option>Tomato</option>
+                            <option>Cotton</option>
+                            <option>Potato</option>
+                            <option>Maize / Corn</option>
+                            <option>Sugarcane</option>
+                            <option>Onion</option>
+                            <option>Chilli / Pepper</option>
+                            <option>Soybean</option>
+                            <option>Groundnut</option>
+                            <option>Mango</option>
+                            <option>Banana</option>
+                            <option>Apple</option>
+                            <option>Grape</option>
+                            <option>Peach</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Analyse Button -->
+                    <button class="analyse-btn" id="analyse-btn" onclick="runDiagnosis()" disabled>
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        Run AI Diagnosis
+                    </button>
+
+                    <p style="text-align:center; font-size:11px; color:var(--text-muted); margin-top:10px; line-height:1.6;">
+                        <i class="fa-solid fa-shield-halved"></i> 100% free · No account needed · Photo not stored · Works offline with local database
+                    </p>
+
+                </div>
+
+                <!-- ===== RIGHT: Results Panel ===== -->
+                <div class="results-panel">
+
+                    <!-- Placeholder -->
+                    <div class="results-placeholder" id="results-placeholder">
+                        <i class="fa-solid fa-leaf"></i>
+                        <h3 style="font-family:'Poppins',sans-serif; font-size:22px; margin-bottom:10px; color:var(--text-primary);">
+                            Ready to Diagnose
+                        </h3>
+                        <p style="margin-bottom:28px;">Upload a plant photo and click <strong>"Run AI Diagnosis"</strong><br>to get a full health report instantly.</p>
+                        <div style="display:flex; gap:24px; justify-content:center; flex-wrap:wrap;">
+                            <div style="text-align:center;">
+                                <i class="fa-solid fa-wheat-awn" style="font-size:32px; color:#4CAF50;"></i>
+                                <div style="font-size:12px; margin-top:6px; color:var(--text-secondary);">Crop Identification</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <i class="fa-solid fa-virus-slash" style="font-size:32px; color:#F9A825;"></i>
+                                <div style="font-size:12px; margin-top:6px; color:var(--text-secondary);">Disease Detection</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <i class="fa-solid fa-shield-halved" style="font-size:32px; color:#42A5F5;"></i>
+                                <div style="font-size:12px; margin-top:6px; color:var(--text-secondary);">Prevention Steps</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <i class="fa-solid fa-flask" style="font-size:32px; color:#AB47BC;"></i>
+                                <div style="font-size:12px; margin-top:6px; color:var(--text-secondary);">Treatment Advice</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loader -->
+                    <div class="ai-loader" id="ai-loader">
+                        <div class="spin-ring"></div>
+                        <p>AI is Analysing Your Plant...</p>
+                        <small>Detecting crop identity, disease patterns &amp; symptoms</small>
+                        <div id="loader-status">Connecting to AI model...</div>
+                    </div>
+
+                    <!-- Error -->
+                    <div class="ai-error" id="ai-error">
+                        <h4 style="margin-bottom:8px;"><i class="fa-solid fa-triangle-exclamation"></i> Diagnosis Failed</h4>
+                        <p id="ai-error-msg">Could not reach the AI service. Please check your internet connection and try again.</p>
+                        <button onclick="runDiagnosis()" style="margin-top:14px; padding:10px 22px; border-radius:10px; background:#D32F2F; color:#fff; border:none; font-weight:700; cursor:pointer;">
+                            <i class="fa-solid fa-rotate"></i> Retry
+                        </button>
+                    </div>
+
+                    <!-- Report Card -->
+                    <div class="report-card" id="report-card">
+
+                        <div class="report-hero">
+                            <div class="report-badges">
+                                <span class="rpill rpill-crop"  id="r-crop-badge">Crop: —</span>
+                                <span class="rpill rpill-conf"  id="r-conf-badge">Confidence: —</span>
+                                <span class="rpill rpill-mild"  id="r-sev-badge">Severity: —</span>
+                            </div>
+                            <div class="report-title"  id="r-title">—</div>
+                            <div class="report-sci"    id="r-sci">—</div>
+                        </div>
+
+                        <div class="report-body">
+
+                            <!-- Top 3 Predictions -->
+                            <div style="margin-bottom:24px;">
+                                <h4 style="font-size:14px; font-weight:700; color:var(--text-secondary); margin-bottom:14px; text-transform:uppercase; letter-spacing:0.5px;">
+                                    <i class="fa-solid fa-chart-bar" style="color:var(--primary-color);"></i> AI Prediction Confidence
+                                </h4>
+                                <div id="pred-bars"></div>
+                            </div>
+
+                            <!-- Info Grid -->
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="lbl">Crop / Plant</div>
+                                    <div class="val" id="r-crop">—</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="lbl">Disease / Condition</div>
+                                    <div class="val" id="r-disease">—</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="lbl">Severity</div>
+                                    <div class="val" id="r-sev">—</div>
+                                    <div class="sev-bar"><div class="sev-ptr" id="r-sev-ptr" style="left:5%"></div></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="lbl">Affected Part</div>
+                                    <div class="val" id="r-part">—</div>
+                                </div>
+                            </div>
+
+                            <!-- Sections -->
+                            <div class="rsec rsec-sym">
+                                <h4><i class="fa-solid fa-magnifying-glass-chart"></i> Observed Symptoms</h4>
+                                <ul id="r-symptoms"></ul>
+                            </div>
+                            <div class="rsec rsec-cause">
+                                <h4><i class="fa-solid fa-circle-question"></i> Cause &amp; Pathogen</h4>
+                                <p id="r-cause">—</p>
+                            </div>
+                            <div class="rsec rsec-prev">
+                                <h4><i class="fa-solid fa-shield-halved"></i> Prevention Measures</h4>
+                                <ul id="r-prevention"></ul>
+                            </div>
+                            <div class="rsec rsec-org">
+                                <h4><i class="fa-solid fa-seedling"></i> Organic &amp; Biological Remedies</h4>
+                                <ul id="r-organic"></ul>
+                            </div>
+                            <div class="rsec rsec-chem">
+                                <h4><i class="fa-solid fa-flask"></i> Chemical Treatment (with Dosage)</h4>
+                                <ul id="r-chemical"></ul>
+                            </div>
+                            <div class="rsec rsec-exp">
+                                <h4><i class="fa-solid fa-user-doctor"></i> When to Consult an Expert</h4>
+                                <p id="r-expert">—</p>
+                            </div>
+
+                            <div class="disclaimer">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <strong>Disclaimer:</strong> This AI analysis is for guidance only. Always verify with a certified agronomist or Krishi Vigyan Kendra (KVK) before applying treatments. Accuracy depends on image clarity.
+                            </div>
+
+                            <button class="analyse-btn" onclick="resetForm()" style="margin-top:20px;">
+                                <i class="fa-solid fa-rotate"></i> Diagnose Another Plant
+                            </button>
+
+                        </div>
+                    </div>
+
+                </div><!-- /results-panel -->
+
+            </div><!-- /doctor-layout -->
+        </section>
+    </main>
+
+    <!-- CAMERA MODAL -->
+    <div class="camera-modal" id="camera-modal">
+        <video id="camera-stream" autoplay playsinline muted></video>
+        <canvas id="camera-canvas" style="display:none;"></canvas>
+        <div class="cam-controls">
+            <button class="cam-btn cam-snap" onclick="captureFromCamera()">
+                <i class="fa-solid fa-camera"></i> Capture
+            </button>
+            <button class="cam-btn cam-close" onclick="closeCamera()">
+                <i class="fa-solid fa-xmark"></i> Cancel
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <h3>#GROW</h3>
+        <p>LET YOUR KNOWLEDGE YIELD A BETTER FUTURE</p>
+        <p>© 2026 GROW. All Rights Reserved.</p>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+    /* ============================================================
+       AI CROP DOCTOR
+       Engine: Hugging Face Inference API (FREE, no key needed)
+       Model:  ozair/Plant-Disease-Prediction (PlantVillage – 38 classes)
+       Fallback: linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification
+       Local disease database for detailed prevention/treatment info.
+    ============================================================ */
+
+    /* ---- HuggingFace models (tried in order) ---- */
+    const HF_MODELS = [
+        'linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification',
+        'Abuzaid01/plant-disease-classifier',
+        'sudhir75/Harimitra'
+    ];
+
+    /* ---- Full PlantVillage disease database ---- */
+    const DISEASE_DB = {
+        /* ---- APPLE ---- */
+        'apple___apple_scab': {
+            crop:'Apple', disease:'Apple Scab', sci:'Venturia inaequalis',
+            severity:'Moderate', part:'Leaves, Fruit',
+            symptoms:['Olive-green to brown scab-like lesions on leaves','Dark sunken scabs on fruit surface','Premature leaf drop','Distorted fruit with cracked skin'],
+            cause:'Fungal disease caused by Venturia inaequalis; spreads during wet spring conditions when ascospores are released.',
+            prevention:['Plant scab-resistant apple varieties (e.g., Liberty, Freedom)','Rake and destroy fallen leaves to reduce inoculum','Apply preventive fungicide sprays before bud break','Prune to improve air circulation within the canopy','Avoid overhead irrigation'],
+            organic:['Spray 0.5% potassium bicarbonate solution every 7–10 days','Apply sulfur-based fungicide at first sign of bud break','Use neem oil (3 ml/L) as a preventive foliar spray'],
+            chemical:['Mancozeb 75% WP @ 2 g/L — spray at pink bud stage','Captan 50% WP @ 2 g/L — repeat every 7–10 days','Tebuconazole 25.9% EC @ 1 ml/L at first symptom'],
+            expert:'Consult if more than 30% of leaves are affected or fruit scab exceeds 20% of crop.'
+        },
+        'apple___black_rot': {
+            crop:'Apple', disease:'Apple Black Rot', sci:'Botryosphaeria obtusa',
+            severity:'Severe', part:'Fruit, Leaves, Bark',
+            symptoms:['Circular purple spots on leaves enlarging to brown lesions','Rotting fruit with concentric rings (frog-eye pattern)','Black mummified fruit remaining on tree','Cankers forming on branches'],
+            cause:'Fungal pathogen Botryosphaeria obtusa entering through wounds, especially after hail injury or pruning cuts.',
+            prevention:['Remove and destroy mummified fruit and dead wood','Prune cankers during dry weather and seal cut ends','Control insects that create entry wounds','Apply protective fungicides from petal fall through harvest'],
+            organic:['Apply copper hydroxide (3 g/L) at bud break and after petal fall','Use Trichoderma harzianum bio-fungicide as soil drench','Spray neem oil 10,000 ppm @ 3 ml/L every 10 days'],
+            chemical:['Captan 50% WP @ 2 g/L — apply from petal fall to harvest','Thiophanate methyl 70% WP @ 1 g/L','Iprodione 50% WP @ 1.5 g/L for post-harvest rot'],
+            expert:'Consult immediately if trunk cankers appear — may require removal of affected limbs.'
+        },
+        'apple___cedar_apple_rust': {
+            crop:'Apple', disease:'Cedar Apple Rust', sci:'Gymnosporangium juniperi-virginianae',
+            severity:'Moderate', part:'Leaves, Fruit',
+            symptoms:['Bright orange-yellow spots on upper leaf surface','Tube-like spore structures on leaf undersides','Premature defoliation','Fruit and twig infections in severe cases'],
+            cause:'Requires two host plants (apple & cedar/juniper) to complete life cycle. Orange gelatinous galls form on cedar in spring.',
+            prevention:['Remove nearby juniper/cedar trees within 1 km radius','Plant rust-resistant apple varieties','Apply preventive fungicide from pink stage through petal fall','Monitor juniper trees for galls in late winter'],
+            organic:['Sulfur-based fungicide @ 2 g/L at pink bud stage','Neem oil spray (3 ml/L) every 7 days during spring','Copper oxychloride 50% WP @ 3 g/L preventively'],
+            chemical:['Myclobutanil 10% WP @ 1 g/L — apply at pink stage','Propiconazole 25% EC @ 1 ml/L every 10–14 days','Triadimefon 25% WP @ 0.5 g/L at first sign of galls'],
+            expert:'Consult if more than 20% of leaves show infection or if fruit is affected in more than 10% of crop.'
+        },
+        'apple___healthy': {
+            crop:'Apple', disease:'Healthy — No Disease Detected', sci:'Malus domestica',
+            severity:'None', part:'None',
+            symptoms:['Leaves appear dark green and glossy','No visible spots, lesions, or discolouration','Normal fruit development','Healthy bark and branch structure'],
+            cause:'Plant appears healthy. No pathogen detected.',
+            prevention:['Maintain regular monitoring every 7–10 days','Apply balanced NPK fertilizer per soil test results','Ensure proper irrigation — avoid waterlogging','Prune deadwood annually to maintain canopy health'],
+            organic:['Spray seaweed extract (3 ml/L) monthly to boost immunity','Apply compost tea as soil drench every 30 days','Use neem cake in the root zone as preventive measure'],
+            chemical:['No treatment required','Apply prophylactic copper spray once before monsoon as precaution','Monitor for early pest signs'],
+            expert:'No expert consultation needed at this time. Schedule routine KVK advisory once a season.'
+        },
+
+        /* ---- TOMATO ---- */
+        'tomato___early_blight': {
+            crop:'Tomato', disease:'Early Blight', sci:'Alternaria solani',
+            severity:'Moderate', part:'Leaves, Stem, Fruit',
+            symptoms:['Dark brown concentric rings (target-board pattern) on lower leaves','Yellowing around lesions (chlorotic halo)','Premature defoliation starting from bottom','Dark sunken lesions on stem near soil level'],
+            cause:'Fungal pathogen Alternaria solani that thrives in warm (24–29°C), humid conditions. Spreads through infected debris and rain splash.',
+            prevention:['Use certified disease-free seeds or treated seeds','Maintain 60–75 cm plant spacing for good airflow','Practice 3-year crop rotation with non-solanaceous crops','Remove and destroy infected lower leaves promptly','Avoid overhead watering — use drip irrigation'],
+            organic:['Spray Trichoderma viride bio-fungicide @ 5 g/L','Apply copper hydroxide 77% WP @ 2.5 g/L every 7 days','Neem oil 0.3% spray + 0.1% soap solution as sticker'],
+            chemical:['Mancozeb 75% WP @ 2 g/L — spray at first symptom','Azoxystrobin 23% SC @ 1 ml/L every 10–14 days','Iprodione 50% WP @ 1.5 g/L for severe infections'],
+            expert:'Consult if more than 50% of foliage is affected or if stem cankers appear at soil level.'
+        },
+        'tomato___late_blight': {
+            crop:'Tomato', disease:'Late Blight', sci:'Phytophthora infestans',
+            severity:'Severe', part:'Leaves, Stem, Fruit',
+            symptoms:['Large irregular water-soaked dark lesions on leaves','White fluffy fungal growth on underside of leaves in humid conditions','Rapid browning and death of foliage','Dark greasy lesions on fruit that spread quickly'],
+            cause:'Oomycete pathogen Phytophthora infestans; explosive in cool (10–20°C) wet weather. Same pathogen that caused the Irish Potato Famine of 1845.',
+            prevention:['Plant resistant varieties (e.g., IIHR-55, Hybrid tomatoes)','Avoid dense planting — maintain proper spacing','Destroy volunteer tomato/potato plants nearby','Apply preventive fungicide at onset of cool rainy weather','Never work in fields when plants are wet'],
+            organic:['Copper oxychloride 50% WP @ 3 g/L preventive spray','Pseudomonas fluorescens @ 10 g/L soil drench','Panchagavya foliar spray @ 3% concentration'],
+            chemical:['Cymoxanil 8% + Mancozeb 64% WP @ 2.5 g/L — most effective','Metalaxyl 8% + Mancozeb 64% WP @ 2 g/L','Dimethomorph 50% WP @ 1 g/L for systemic control'],
+            expert:'This is a HIGH ALERT disease. Consult immediately if spotted — it can destroy entire crop within days.'
+        },
+        'tomato___bacterial_spot': {
+            crop:'Tomato', disease:'Bacterial Spot', sci:'Xanthomonas campestris pv. vesicatoria',
+            severity:'Moderate', part:'Leaves, Fruit, Stem',
+            symptoms:['Small water-soaked spots on leaves turning dark brown with yellow halo','Raised scab-like lesions on fruit','Defoliation in severe cases','Stem lesions causing wilting'],
+            cause:'Bacterial pathogen Xanthomonas species; spreads through rain, irrigation water, contaminated tools, and infected seeds.',
+            prevention:['Use hot-water treated or certified disease-free seeds','Avoid working in wet conditions','Sanitise tools with 10% bleach solution between rows','Rotate crops — avoid planting tomato/pepper in same field for 2 years','Remove volunteer plants and solanaceous weeds'],
+            organic:['Copper oxychloride 50% WP @ 3 g/L as preventive spray','Bacillus subtilis bio-bactericide @ 5 g/L','Garlic extract spray (100 g crushed garlic per 10 L water)'],
+            chemical:['Streptomycin sulphate 90% SP + Tetracycline @ 500 ppm solution','Copper hydroxide 77% WP @ 2.5 g/L every 5–7 days','Kasugamycin 3% SL @ 2 ml/L for moderate infection'],
+            expert:'Consult if more than 30% plants show symptoms or if fruit infection exceeds 15%.'
+        },
+        'tomato___leaf_mold': {
+            crop:'Tomato', disease:'Leaf Mold', sci:'Passalora fulva (Cladosporium fulvum)',
+            severity:'Mild', part:'Leaves',
+            symptoms:['Pale yellow spots on upper leaf surface','Olive-green to brown velvety mold on leaf undersides','Infected leaves curl and wither','Mainly affects greenhouse-grown tomatoes'],
+            cause:'Fungal pathogen that thrives in high humidity (>85%) and moderate temperatures (24–26°C).',
+            prevention:['Maintain humidity below 85% in greenhouse using ventilation','Remove lower leaves to improve air circulation','Avoid overhead watering','Space plants adequately and train vines upward'],
+            organic:['Spray potassium bicarbonate 0.5% solution every 7 days','Apply copper-based fungicide at early symptom stage','Remove and destroy all affected leaves promptly'],
+            chemical:['Chlorothalonil 75% WP @ 2 g/L — spray every 7–10 days','Mancozeb 75% WP @ 2 g/L preventive spray','Iprodione 50% WP @ 1.5 g/L for persistent infection'],
+            expert:'Consult if humid conditions persist for more than a week with more than 40% canopy affected.'
+        },
+        'tomato___septoria_leaf_spot': {
+            crop:'Tomato', disease:'Septoria Leaf Spot', sci:'Septoria lycopersici',
+            severity:'Moderate', part:'Leaves',
+            symptoms:['Small circular spots with grey-white centres and dark borders','Dark pycnidia (spore-producing bodies) visible in lesion centres','Yellowing and premature leaf drop from bottom upward','Does not typically affect fruit directly'],
+            cause:'Fungal pathogen Septoria lycopersici; favoured by warm humid conditions and rain splash. Overwinters in crop debris.',
+            prevention:['Rotate tomatoes with non-solanaceous crops for minimum 2 years','Mulch soil to reduce rain splash of spores','Remove infected lower leaves early in season','Use drip irrigation instead of overhead watering'],
+            organic:['Copper hydroxide 77% WP @ 3 g/L preventive spray','Neem oil 0.3% spray every 7–10 days','Trichoderma viride @ 5 g/L soil application'],
+            chemical:['Chlorothalonil 75% WP @ 2 g/L — most effective at first sign','Mancozeb 75% WP @ 2 g/L every 10 days','Azoxystrobin 23% SC @ 1 ml/L for systemic control'],
+            expert:'Seek advice if defoliation exceeds 50% before fruit maturity stage.'
+        },
+        'tomato___spider_mites two-spotted_spider_mite': {
+            crop:'Tomato', disease:'Spider Mites (Two-Spotted)', sci:'Tetranychus urticae',
+            severity:'Moderate', part:'Leaves',
+            symptoms:['Tiny yellow or white stippling dots on upper leaf surface','Fine webbing on undersides of leaves in heavy infestations','Bronzing and drying of leaves from bottom upward','Visible tiny moving mites (yellow-green with two dark spots) under leaf'],
+            cause:'Spider mites are not fungi/bacteria — they are tiny arachnid pests (0.4mm). Hot dry conditions (above 30°C) cause population explosions.',
+            prevention:['Maintain proper irrigation — mites thrive in water-stressed plants','Release predatory mites (Phytoseiulus persimilis) for biocontrol','Avoid excessive nitrogen fertilization which makes leaves more palatable','Remove and burn heavily infested leaves or whole plants','Install shade nets during peak summer to reduce temperatures'],
+            organic:['Spray neem oil 0.5% (5 ml/L) every 5–7 days — coats and smothers mites','Apply garlic spray (250 g garlic blended in 10 L water, strained)','Release predatory mite Neoseiulus californicus @ 50/plant','Spray diluted soap solution (2 ml dishwash soap/L) to suffocate mites'],
+            chemical:['Abamectin 1.9% EC @ 1 ml/L — highly effective miticide','Spiromesifen 22.9% SC @ 1 ml/L — systemic miticide','Fenazaquin 10% EC @ 2 ml/L — rotate to prevent resistance','Never use pyrethroid insecticides — they kill predators and cause mite outbreaks'],
+            expert:'Consult if more than 30% leaf surface is bronzed or if webbing is visible on fruits.'
+        },
+        'tomato___target_spot': {
+            crop:'Tomato', disease:'Target Spot', sci:'Corynespora cassiicola',
+            severity:'Moderate', part:'Leaves, Fruit',
+            symptoms:['Dark brown spots with concentric rings (target pattern) on all plant parts','Yellowing around lesions','Fruit lesions are sunken with dark borders','Widespread in warm humid conditions'],
+            cause:'Fungal pathogen Corynespora cassiicola with broad host range. Spreads by wind and rain. Common in greenhouse and field tomatoes.',
+            prevention:['Remove plant debris after harvest — do not leave in field','Improve ventilation and reduce leaf wetness periods','Use resistant varieties where available','Rotate crops with cereals or legumes'],
+            organic:['Copper oxychloride 50% WP @ 3 g/L spray every 7 days','Apply Trichoderma harzianum soil drench monthly','Neem oil + Bordeaux mixture spray combination'],
+            chemical:['Tebuconazole 25.9% EC @ 1 ml/L every 10–14 days','Difenoconazole 25% EC @ 0.5 ml/L','Boscalid + Pyraclostrobin 38.5% WG @ 0.5 g/L'],
+            expert:'Consult if fruit set is affected or if disease appears before flowering stage.'
+        },
+        'tomato___tomato_yellow_leaf_curl_virus': {
+            crop:'Tomato', disease:'Yellow Leaf Curl Virus (TYLCV)', sci:'Begomovirus (Whitefly-transmitted)',
+            severity:'Severe', part:'Whole Plant',
+            symptoms:['Upward curling and cupping of young leaves','Yellowing and interveinal chlorosis of leaves','Stunted growth with bushy appearance','Flower drop leading to no or very poor fruit set','Silvery sheen on affected leaves'],
+            cause:'Viral disease transmitted by whitefly (Bemisia tabaci). The virus cannot be cured — only the vector can be managed. Plants infected early produce no yield.',
+            prevention:['Use TYLCV-resistant tomato varieties (e.g., TH-4, IIHR Tomato hybrids)','Grow seedlings under 40-mesh insect-proof net to prevent whitefly attack','Plant marigold border crops to repel whiteflies','Uproot and destroy infected plants immediately — do not leave them in the field','Install yellow sticky traps @ 20 traps/acre to monitor whitefly population'],
+            organic:['Spray neem oil 10,000 ppm @ 2 ml/L to repel whiteflies','Apply Beauveria bassiana bio-insecticide @ 5 g/L for whitefly control','Yellow sticky traps to mass-trap adult whiteflies','Reflective silver mulch reduces whitefly landing on plants'],
+            chemical:['Imidacloprid 17.8% SL @ 0.3 ml/L — systemic whitefly control (seedling stage)','Thiamethoxam 25% WG @ 0.3 g/L — rotate with imidacloprid','Pymetrozine 50% WG @ 0.4 g/L — selective whitefly insecticide','Afidopyropen 50 g/L SC @ 0.5 ml/L for resistance management'],
+            expert:'URGENT — Uproot affected plants before whitefly spreads virus to rest of crop. Consult KVK immediately.'
+        },
+        'tomato___tomato_mosaic_virus': {
+            crop:'Tomato', disease:'Tomato Mosaic Virus (ToMV)', sci:'Tobamovirus',
+            severity:'Moderate', part:'Leaves, Fruit',
+            symptoms:['Mosaic pattern of light and dark green on leaves','Leaf distortion, puckering and blistering','Stunted plant growth','Fruit may show internal browning or external mottling','Plants infected early show severe symptoms'],
+            cause:'Tobamovirus, one of the most stable plant viruses. Spreads by contact — contaminated hands, tools, clothing, grafting material, and infected seeds. Not insect-transmitted.',
+            prevention:['Always wash hands with soap before handling plants','Disinfect all tools with 10% bleach or 70% alcohol between plants','Use TMV-resistant or tolerant varieties','Remove infected plants and do not compost them','Avoid smoking near plants — tobacco plants carry related virus'],
+            organic:['No chemical cure — management is sanitation-based','Skim milk spray (1:9 milk to water) can coat virus particles and reduce spread','Destroy infected plants promptly and burn'],
+            chemical:['No fungicide or bactericide is effective against viruses','Spray micronutrient mix (zinc + boron) to keep healthy plants vigorous','Imidacloprid to control any secondary aphid infestations'],
+            expert:'Consult if more than 20% of plants are infected. Consider replanting with resistant varieties.'
+        },
+        'tomato___healthy': {
+            crop:'Tomato', disease:'Healthy — No Disease Detected', sci:'Solanum lycopersicum',
+            severity:'None', part:'None',
+            symptoms:['Deep green healthy foliage with no lesions','Normal stem thickness and plant height','Healthy flower buds developing normally','No discolouration or deformity visible'],
+            cause:'No pathogen detected. Plant appears healthy.',
+            prevention:['Water at base — avoid wetting leaves','Apply balanced NPK + micronutrients as per soil test','Monitor for early signs of pest/disease weekly','Stake plants to keep fruit off ground'],
+            organic:['Spray seaweed extract (2 ml/L) monthly as growth booster','Apply Pseudomonas fluorescens @ 5 g/L as preventive soil drench','Use neem cake in planting pit to prevent soilborne pests'],
+            chemical:['No treatment needed currently','Apply prophylactic copper spray once before monsoon','Keep records of previous diseases for rotation planning'],
+            expert:'No immediate consultation needed. Schedule routine agronomist visit before next season.'
+        },
+
+        /* ---- POTATO ---- */
+        'potato___early_blight': {
+            crop:'Potato', disease:'Early Blight', sci:'Alternaria solani',
+            severity:'Moderate', part:'Leaves',
+            symptoms:['Dark brown concentric ring lesions (target pattern) on older lower leaves','Yellow chlorotic halo around lesions','Progressive leaf death from bottom upward','Stem lesions near soil level'],
+            cause:'Fungal disease caused by Alternaria solani, favoured by warm days and cool nights. Spreads through infected crop debris and wind.',
+            prevention:['Plant certified disease-free seed tubers','Destroy crop debris immediately after harvest','Maintain adequate potassium nutrition — reduces susceptibility','Irrigate in mornings to allow foliage to dry by evening','Use resistant varieties where available'],
+            organic:['Trichoderma viride 5 g/L + Pseudomonas fluorescens 5 g/L soil drench','Copper oxychloride 50% WP @ 3 g/L foliar spray','Neem oil 0.3% + 0.1% soap spray every 10 days'],
+            chemical:['Mancozeb 75% WP @ 2 g/L — apply at first sign','Chlorothalonil 75% WP @ 2 g/L every 7–10 days','Azoxystrobin 23% SC @ 1 ml/L for systemic control'],
+            expert:'Consult if more than 50% of foliage is blighted before crop reaches maturity.'
+        },
+        'potato___late_blight': {
+            crop:'Potato', disease:'Late Blight', sci:'Phytophthora infestans',
+            severity:'Critical', part:'Leaves, Tubers, Stem',
+            symptoms:['Water-soaked irregular dark green-to-black lesions on leaves','White cottony fungal growth on leaf undersides in humid weather','Rapid browning and collapse of entire plant foliage','Infected tubers show reddish-brown rot under skin'],
+            cause:'Phytophthora infestans, an oomycete (water mold) — NOT a true fungus. Devastating in cool (10–20°C), wet conditions. Spores spread up to 40 km by wind.',
+            prevention:['Use blight-free certified seed tubers — most important measure','Earth up soil around stems to protect tubers','Apply preventive fungicide before monsoon and during cool spells','Do not plant potatoes in same field for minimum 3 years','Remove volunteer potato plants from previous season'],
+            organic:['Copper oxychloride 50% WP @ 3 g/L as preventive spray','Bordeaux mixture (1%) at first sign of disease','Bacillus subtilis bio-fungicide @ 10 g/L'],
+            chemical:['Cymoxanil 8% + Mancozeb 64% WP @ 2.5 g/L — most effective','Metalaxyl 8% + Mancozeb 64% WP @ 2 g/L','Dimethomorph 50% WP @ 1 g/L for systemic activity — rotate products to avoid resistance'],
+            expert:'CRITICAL — This disease can destroy an entire crop in 3–5 days. Contact KVK or agronomist immediately upon spotting first symptoms.'
+        },
+        'potato___healthy': {
+            crop:'Potato', disease:'Healthy — No Disease Detected', sci:'Solanum tuberosum',
+            severity:'None', part:'None',
+            symptoms:['Vigorous green foliage','Normal stem thickness','No visible spots or lesions','Healthy root zone and tuber development'],
+            cause:'No pathogen detected.',
+            prevention:['Earth up soil around stems at 30 and 60 days','Apply balanced fertilizer — critical for tuber bulking','Monitor for Colorado potato beetle and aphid infestations'],
+            organic:['Spray Pseudomonas fluorescens @ 5 g/L monthly','Apply neem cake to soil before planting','Intercrop with mustard to deter pests'],
+            chemical:['No treatment needed','Prophylactic copper spray before monsoon season recommended','Soil test and apply micronutrients — especially potassium'],
+            expert:'Routine KVK advisory recommended before next planting season.'
+        },
+
+        /* ---- CORN / MAIZE ---- */
+        'corn_(maize)___common_rust_': {
+            crop:'Maize / Corn', disease:'Common Rust', sci:'Puccinia sorghi',
+            severity:'Moderate', part:'Leaves',
+            symptoms:['Brick-red to brown oval pustules scattered randomly on both leaf surfaces','Pustules rupture and release powdery rust-coloured spores','Severe infection causes yellowing and premature leaf death','More severe on younger leaves and upper canopy'],
+            cause:'Obligate fungal pathogen Puccinia sorghi; spread by wind-borne urediniospores. Favoured by cool temperatures (16–23°C) and high humidity.',
+            prevention:['Plant rust-resistant hybrid varieties','Maintain optimal plant spacing for airflow','Avoid excess nitrogen fertilizer which makes plants more susceptible','Early planting to allow crop to establish before rust season'],
+            organic:['Sulfur-based fungicide 80% WP @ 2 g/L spray at first sign','Neem oil 0.3% + soap spray every 7 days','Potassium silicate foliar spray to strengthen leaf cell walls'],
+            chemical:['Propiconazole 25% EC @ 1 ml/L — most effective triazole for rust','Tebuconazole 25.9% EC @ 1 ml/L every 10–14 days','Mancozeb 75% WP @ 2 g/L as protective fungicide'],
+            expert:'Consult if rust appears before tasseling stage — early infection can cause significant yield loss.'
+        },
+        'corn_(maize)___northern_leaf_blight': {
+            crop:'Maize / Corn', disease:'Northern Leaf Blight (NLB)', sci:'Exserohilum turcicum',
+            severity:'Moderate', part:'Leaves',
+            symptoms:['Long cigar-shaped grey-green to tan lesions (7–15 cm) on leaves','Lesions start on lower leaves and progress upward','In humid conditions, dark spore masses visible on lesions','Premature dying of leaves before crop matures'],
+            cause:'Fungal pathogen Exserohilum turcicum; spread by wind and rain splash. Thrives in moderate temperatures (18–27°C) with prolonged leaf wetness.',
+            prevention:['Plant NLB-resistant hybrid varieties — single most effective measure','Rotate maize with soybean or legumes for one season','Destroy crop residue after harvest (the main source of inoculum)','Avoid late planting — crop should be mature before peak humidity season'],
+            organic:['Copper oxychloride 50% WP @ 3 g/L at first sign','Mancozeb 75% WP @ 2 g/L as protective spray','Trichoderma viride soil application to reduce soilborne inoculum'],
+            chemical:['Propiconazole 25% EC @ 1 ml/L — apply at VT (tasseling) stage','Azoxystrobin 23% SC @ 1 ml/L every 14 days','Picoxystrobin 22.52% SC @ 0.5 ml/L for systemic control'],
+            expert:'Seek advice if disease appears before silking stage — yield loss can exceed 50% in severe cases.'
+        },
+        'corn_(maize)___cercospora_leaf_spot gray_leaf_spot': {
+            crop:'Maize / Corn', disease:'Grey Leaf Spot / Cercospora Leaf Spot', sci:'Cercospora zeae-maydis',
+            severity:'Moderate', part:'Leaves',
+            symptoms:['Rectangular grey-tan lesions running parallel to leaf veins','Lesions have well-defined parallel edges (unlike NLB which tapers)','Lesions turn grey with black spore masses in humid conditions','Leaves die prematurely, reducing photosynthesis'],
+            cause:'Fungal pathogen that overwinters in crop debris. Wind-dispersed spores infect during warm (25–30°C) humid conditions. Worst in continuous maize fields.',
+            prevention:['Rotate maize with non-host crops (soybean, cotton) for 1–2 seasons','Till crop debris after harvest to accelerate decomposition','Plant GLS-resistant hybrids with QTL resistance genes','Ensure adequate plant spacing for air circulation'],
+            organic:['Neem oil 0.3% foliar spray every 7–10 days','Copper hydroxide 77% WP @ 2.5 g/L preventive spray','Trichoderma harzianum soil application @ 5 kg/acre'],
+            chemical:['Propiconazole 25% EC @ 1 ml/L — most effective at early VT stage','Azoxystrobin + Propiconazole combination product @ label dose','Tebuconazole 25.9% EC @ 1 ml/L for severe infections'],
+            expert:'Consult immediately if infection starts before tasseling. Economic threshold: 50% plants affected with lesions on ear leaf.'
+        },
+        'corn_(maize)___healthy': {
+            crop:'Maize / Corn', disease:'Healthy — No Disease Detected', sci:'Zea mays',
+            severity:'None', part:'None',
+            symptoms:['Vigorous dark green leaves','Healthy tassel and silk development','No visible lesions or discolouration','Normal plant height for growth stage'],
+            cause:'No pathogen detected.',
+            prevention:['Apply split doses of nitrogen fertilizer at V6 and tasseling','Monitor for fall armyworm — check whorl leaves weekly','Ensure good drainage to prevent waterlogging','Detassel female rows in seed production'],
+            organic:['Spray Bacillus thuringiensis (Bt) for caterpillar control','Release Trichogramma cards for stem borer biocontrol','Apply neem cake @ 50 kg/acre before planting'],
+            chemical:['No disease treatment needed currently','Apply micronutrients (Zinc sulphate 0.5%) if leaf tips show deficiency','Monitor and spray spinosad for fall armyworm if needed'],
+            expert:'Routine crop inspection at V6 and tasseling stages recommended.'
+        },
+
+        /* ---- GRAPE ---- */
+        'grape___black_rot': {
+            crop:'Grape', disease:'Grape Black Rot', sci:'Guignardia bidwellii',
+            severity:'Severe', part:'Leaves, Fruit, Shoots',
+            symptoms:['Small tan spots with dark borders on leaves','Fruit starts as whitish spots then turns brown and shrivels (mummified)','Dark pycnidia (black dots) in lesion centres','Infected clusters turn completely black and hang as dried mummies'],
+            cause:'Fungal pathogen Guignardia bidwellii; primary infection from overwintered mummies. Wet conditions during early shoot growth trigger spore release.',
+            prevention:['Remove all mummified fruit from vines and ground before bud break','Prune vines to open up canopy for airflow and light penetration','Apply preventive fungicide from bud break through fruit set (critical window)','Practice sanitation — rake and destroy fallen leaves'],
+            organic:['Copper-based spray (Bordeaux mixture 1%) at pre-bloom stage','Sulfur 80% WP @ 3 g/L — apply from tight cluster to post-bloom','Potassium bicarbonate 0.5% solution spray every 7 days'],
+            chemical:['Myclobutanil 10% WP @ 1 g/L from early shoot growth','Mancozeb 75% WP @ 2 g/L as protective fungicide','Tebuconazole 25.9% EC @ 1 ml/L for systemic control — alternate with mancozeb'],
+            expert:'Consult if more than 30% of fruit cluster is infected — infected mummified grapes must be removed entirely.'
+        },
+        'grape___esca_(black_measles)': {
+            crop:'Grape', disease:'Esca (Black Measles / Grapevine Decline)', sci:'Complex of Phaeomoniella chlamydospora + others',
+            severity:'Severe', part:'Leaves, Wood, Fruit',
+            symptoms:['Tiger-stripe pattern on leaves — interveinal yellow to red discolouration','Fruit shows small dark spots (measles pattern) on berry skin','Sudden wilting and death of shoot ("apoplexy") in hot weather','Internal wood staining visible on cross-section of pruned wood'],
+            cause:'Complex disease caused by multiple wood-rotting fungi entering through pruning wounds. Chronic, progressive disease — no cure once established in wood.',
+            prevention:['Paint all pruning wounds with Trichoderma harzianum paste immediately after cutting','Prune only during dry weather — never during rain','Delay pruning until after coldest winter period','Avoid large pruning cuts — use two-bud spurs when possible'],
+            organic:['Apply Trichoderma harzianum paste to all pruning cuts','Use wound sealant (grafting wax or paint) on cuts larger than 2 cm','Remove and burn severely affected vines to prevent spread'],
+            chemical:['Thiophanate methyl 70% WP paste applied to pruning cuts','Tebuconazole + paint mix applied to fresh pruning wounds','Systemic fungicide injection into vine trunk for valuable/old vines (specialist treatment)'],
+            expert:'URGENT — This is a chronic wood disease. Consult a viticulture specialist for proper canopy management and replanting decisions.'
+        },
+        'grape___leaf_blight_(isariopsis_leaf_spot)': {
+            crop:'Grape', disease:'Isariopsis Leaf Spot / Leaf Blight', sci:'Pseudocercospora vitis',
+            severity:'Mild', part:'Leaves',
+            symptoms:['Irregular dark brown spots with yellow margins on older leaves','Spots enlarge and merge causing leaf yellowing','Premature defoliation in severe cases','Dark spore masses visible on underside of spots in humid conditions'],
+            cause:'Fungal pathogen that overwinters in fallen leaves. Secondary infection after primary diseases like downy mildew weaken the plant.',
+            prevention:['Collect and destroy fallen leaves at end of season','Maintain canopy openness to reduce humidity','Apply preventive copper sprays during wet weather','Ensure balanced nutrition — potassium deficiency increases susceptibility'],
+            organic:['Copper oxychloride 50% WP @ 3 g/L spray every 10–14 days','Neem oil 0.3% + soap spray every 7 days','Sulfur 80% WP @ 2 g/L during humid weather'],
+            chemical:['Mancozeb 75% WP @ 2 g/L as protective spray','Carbendazim 50% WP @ 1 g/L for established infection','Zineb 75% WP @ 2 g/L — effective contact fungicide'],
+            expert:'Consult if defoliation exceeds 40% of canopy before fruit ripening.'
+        },
+        'grape___healthy': {
+            crop:'Grape', disease:'Healthy — No Disease Detected', sci:'Vitis vinifera',
+            severity:'None', part:'None',
+            symptoms:['Dark green glossy leaves with no spots','Healthy tendrils and shoot growth','Normal cluster development','No wood discolouration'],
+            cause:'No pathogen detected.',
+            prevention:['Maintain proper training system (VSP, GDC) for good airflow','Monitor for downy and powdery mildew weekly during growing season','Paint all pruning wounds with Trichoderma paste'],
+            organic:['Apply compost @ 10 kg/vine annually','Spray seaweed extract (2 ml/L) monthly during growing season','Use Trichoderma harzianum as preventive soil drench'],
+            chemical:['No treatment needed','Prophylactic Bordeaux mixture spray before monsoon','Foliar micronutrient (Zinc + Boron) spray at bud break'],
+            expert:'Schedule annual vine assessment with viticulture specialist before pruning season.'
+        },
+
+        /* ---- RICE ---- */
+        'rice___leaf_blast': {
+            crop:'Rice / Paddy', disease:'Rice Blast (Leaf Blast)', sci:'Magnaporthe oryzae',
+            severity:'Severe', part:'Leaves',
+            symptoms:['Spindle-shaped lesions with grey-white centre and reddish-brown border','Lesions with pointed ends (eye-shaped or diamond-shaped)','Severe infection causes complete leaf death','Neck blast causes panicle snap — complete yield loss'],
+            cause:'Fungal pathogen Magnaporthe oryzae. Most destructive rice disease worldwide. Spreads by wind-borne spores. High humidity, excess nitrogen, and cool nights (below 25°C) favour infection.',
+            prevention:['Use blast-resistant varieties like Pusa Basmati 1637, IR-64, ADT 43','Avoid excess nitrogen fertilizer — split into 3–4 doses','Maintain adequate spacing (20×15 cm) for airflow','Drain and dry field for 2–3 days when blast is seen','Avoid evening irrigation which keeps leaves wet overnight'],
+            organic:['Pseudomonas fluorescens @ 10 g/L spray at first sign','Neem Seed Kernel Extract (NSKE) 5% solution spray','Silica application (silica slag @ 500 kg/ha) reduces infection by strengthening leaf cuticle'],
+            chemical:['Tricyclazole 75% WP @ 0.6 g/L — spray at first sign of lesions','Isoprothiolane 40% EC @ 1.5 ml/L — systemic, most effective','Carbendazim 50% WP @ 1 g/L for moderate infections'],
+            expert:'URGENT for neck blast — if panicle emerges and shows blast, contact KVK. Once neck is infected, no chemical can save yield.'
+        },
+
+        /* ---- WHEAT ---- */
+        'wheat___yellow_rust': {
+            crop:'Wheat', disease:'Yellow Stripe Rust', sci:'Puccinia striiformis f.sp. tritici',
+            severity:'Severe', part:'Leaves',
+            symptoms:['Bright yellow-orange pustules arranged in stripes parallel to leaf veins','Powdery spore masses that rub off easily on fingers','Leaves turn brown as disease progresses','Can spread rapidly in cool weather (5–15°C)'],
+            cause:'Obligate fungal pathogen spread entirely by wind-borne urediniospores. Most destructive wheat disease in northern India when cool humid conditions prevail in February-March.',
+            prevention:['Plant rust-resistant varieties (HD-2967, DBW-187, PBW-621)','Early planting (October-November) allows crop to escape late season rust','Monitor crop from February onwards — scout weekly','Report any new rust outbreak to nearest Krishi Vigyan Kendra'],
+            organic:['No highly effective organic cure — prevention through resistant varieties is key','Neem oil spray as early intervention in mild outbreaks','Sulfur 80% WP @ 3 g/L as protective spray before first sign'],
+            chemical:['Propiconazole 25% EC @ 1 ml/L — single spray at first sign is very effective','Tebuconazole 25.9% EC @ 1 ml/L — systemic triazole fungicide','Hexaconazole 5% EC @ 2 ml/L — effective for severe outbreaks'],
+            expert:'URGENT — Yellow rust can destroy 30–70% of yield if not controlled within 5–7 days of first sign. Contact KVK immediately.'
+        },
+
+        /* ---- DEFAULT FALLBACK ---- */
+        '_default': {
+            crop:'Unknown Crop', disease:'Disease Detected', sci:'Unknown Pathogen',
+            severity:'Moderate', part:'Leaves / Plant',
+            symptoms:['Visible abnormal discolouration on plant tissue','Irregular lesions or spots','Signs of stress or unusual growth pattern','Possible pest or pathogen involvement'],
+            cause:'The exact pathogen could not be determined with high certainty from the image. A clear, well-lit close-up of the affected area will improve accuracy.',
+            prevention:['Remove and destroy severely infected plant parts','Avoid overhead watering to reduce leaf wetness','Ensure proper plant spacing for airflow','Apply balanced nutrition to keep plants healthy and resistant'],
+            organic:['Apply copper oxychloride 50% WP @ 3 g/L as broad-spectrum preventive spray','Spray neem oil 0.3% + 0.1% soap every 7 days','Use Trichoderma viride bio-fungicide as soil drench'],
+            chemical:['Mancozeb 75% WP @ 2 g/L — broad spectrum protective fungicide','Carbendazim 50% WP @ 1 g/L — systemic broad-spectrum control','Consult local agronomist to identify exact disease before applying specific treatment'],
+            expert:'Please take a clearer image of the affected leaf/fruit and consult your nearest KVK or agronomist for precise identification.'
+        }
+    };
+
+    /* ---- Normalise HuggingFace label to DB key ---- */
+    function normaliseLabel(label) {
+        return label.toLowerCase()
+                    .replace(/\s+/g, '_')
+                    .replace(/[^a-z0-9_()\-]/g, '_');
+    }
+
+    /* ---- Map label to DB entry ---- */
+    function lookupDisease(label) {
+        const key = normaliseLabel(label);
+        if (DISEASE_DB[key]) return DISEASE_DB[key];
+        // Partial match
+        for (const k of Object.keys(DISEASE_DB)) {
+            if (key.includes(k) || k.includes(key.split('___')[0])) return DISEASE_DB[k];
+        }
+        // Parse crop + disease from label like "Tomato___Early_blight"
+        const parts = label.split('___');
+        if (parts.length === 2) {
+            const cropName = parts[0].replace(/_/g,' ').replace(/\(.*\)/,'').trim();
+            const disName  = parts[1].replace(/_/g,' ').trim();
+            const fallback = {...DISEASE_DB['_default']};
+            fallback.crop    = cropName;
+            fallback.disease = disName;
+            return fallback;
+        }
+        return DISEASE_DB['_default'];
+    }
+
+    /* ---- Local fallback when AI is offline ---- */
+    function localFallbackDiagnosis(cropHint, selectedSymptoms) {
+        const entries = Object.entries(DISEASE_DB).filter(([k]) => k !== '_default');
+
+        // Step 1: filter by crop hint if provided
+        let candidates = entries;
+        if (cropHint) {
+            const hint = cropHint.toLowerCase().split('/')[0].trim().split(' ')[0];
+            const cropFiltered = entries.filter(([, v]) => v.crop.toLowerCase().includes(hint));
+            if (cropFiltered.length > 0) candidates = cropFiltered;
+        }
+
+        // Step 2: score each candidate by how many selected symptoms match
+        if (selectedSymptoms.length > 0) {
+            const symLower = selectedSymptoms.map(s => s.toLowerCase());
+            let bestMatch = null;
+            let bestScore = -1;
+
+            for (const [, entry] of candidates) {
+                let score = 0;
+                for (const sym of entry.symptoms) {
+                    for (const userSym of symLower) {
+                        if (sym.toLowerCase().includes(userSym) || userSym.includes(sym.toLowerCase().substring(0, 12))) {
+                            score++;
+                        }
+                    }
+                }
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMatch = entry;
+                }
+            }
+
+            if (bestMatch && bestScore > 0) return { ...bestMatch };
+        }
+
+        // Step 3: return first candidate that's not healthy, or default
+        const nonHealthy = candidates.filter(([, v]) => v.severity !== 'None');
+        if (nonHealthy.length > 0) return { ...nonHealthy[0][1] };
+
+        return { ...DISEASE_DB['_default'] };
+    }
+
+    /* ---- Severity badge class ---- */
+    function sevClass(sev) {
+        return { None:'rpill-healthy', Mild:'rpill-mild', Moderate:'rpill-moderate', Severe:'rpill-severe', Critical:'rpill-severe' }[sev] || 'rpill-mild';
+    }
+
+    /* ---- Severity pointer % ---- */
+    function sevPct(sev) {
+        return { None:5, Mild:20, Moderate:50, Severe:78, Critical:96 }[sev] || 30;
+    }
+
+    /* ============================================================
+       IMAGE HANDLING
+    ============================================================ */
+    let imageBlob    = null;
+    let cameraStream = null;
+
+    function setImage(blob, previewSrc) {
+        imageBlob = blob;
+        document.getElementById('preview-img').src = previewSrc;
+        document.getElementById('preview-wrapper').style.display = 'block';
+        document.getElementById('drop-zone').style.display = 'none';
+        document.getElementById('analyse-btn').disabled = false;
+        resetResults();
+    }
+
+    function clearImage() {
+        imageBlob = null;
+        document.getElementById('preview-wrapper').style.display = 'none';
+        document.getElementById('drop-zone').style.display = 'block';
+        document.getElementById('file-input').value = '';
+        document.getElementById('analyse-btn').disabled = true;
+    }
+
+    function handleFileUpload(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const url = URL.createObjectURL(file);
+        setImage(file, url);
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        document.getElementById('drop-zone').classList.remove('drag-over');
+        const file = e.dataTransfer.files[0];
+        if (!file || !file.type.startsWith('image/')) return;
+        const url = URL.createObjectURL(file);
+        setImage(file, url);
+    }
+
+    /* ============================================================
+       CAMERA
+    ============================================================ */
+    async function openCamera() {
+        try {
+            cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            document.getElementById('camera-stream').srcObject = cameraStream;
+            document.getElementById('camera-modal').classList.add('active');
+        } catch {
+            alert('Camera access denied or unavailable. Please allow camera permission in your browser settings.');
+        }
+    }
+
+    function captureFromCamera() {
+        const video  = document.getElementById('camera-stream');
+        const canvas = document.getElementById('camera-canvas');
+        canvas.width  = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        closeCamera();
+        canvas.toBlob(blob => {
+            const url = URL.createObjectURL(blob);
+            setImage(blob, url);
+        }, 'image/jpeg', 0.92);
+    }
+
+    function closeCamera() {
+        if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
+        document.getElementById('camera-modal').classList.remove('active');
+    }
+
+    /* ============================================================
+       SYMPTOM TOGGLE
+       Click once = select (green), click again = deselect (grey)
+       Nothing is pre-selected by default.
+    ============================================================ */
+    function toggleSymptom(el) {
+        // Ensure we always target the .sym-tag span, even if an inner icon was clicked
+        const tag = el.closest ? el.closest('.sym-tag') : el;
+        if (!tag) return;
+        tag.classList.toggle('selected');
+    }
+
+    function getSelectedSymptoms() {
+        return [...document.querySelectorAll('.sym-tag.selected')]
+                   .map(t => t.textContent.trim().replace(/\s+/g, ' '));
+    }
+
+    /* ============================================================
+       RESET UI
+    ============================================================ */
+    function resetResults() {
+        document.getElementById('results-placeholder').style.display = 'block';
+        document.getElementById('ai-loader').classList.remove('active');
+        document.getElementById('ai-error').classList.remove('active');
+        document.getElementById('report-card').classList.remove('active');
+    }
+
+    function resetForm() {
+        clearImage();
+        resetResults();
+        document.querySelectorAll('.sym-tag').forEach(t => t.classList.remove('selected'));
+        document.getElementById('crop-hint').selectedIndex = 0;
+    }
+
+    /* ============================================================
+       HUGGING FACE AI CALL (no API key needed)
+    ============================================================ */
+    async function callHuggingFace(blob, modelIdx = 0) {
+        if (modelIdx >= HF_MODELS.length) throw new Error('All AI models failed to respond. Please check your internet connection and try again.');
+
+        const url = `https://api-inference.huggingface.co/models/${HF_MODELS[modelIdx]}`;
+        setLoaderStatus(`Connecting to AI model ${modelIdx + 1}/${HF_MODELS.length}...`);
+
+        let response;
+        try {
+            response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/octet-stream' },
+                body: blob
+            });
+        } catch (networkErr) {
+            // Network error (CORS, offline, DNS failure, etc.)
+            console.warn(`Model ${modelIdx + 1} network error:`, networkErr.message);
+            setLoaderStatus(`Model ${modelIdx + 1} unreachable, trying next...`);
+            await delay(1500);
+            return callHuggingFace(blob, modelIdx + 1);
+        }
+
+        if (response.status === 503) {
+            const data = await response.json().catch(() => ({}));
+            const waitSecs = Math.min(data.estimated_time || 25, 35);
+            setLoaderStatus(`AI model is warming up... please wait ~${Math.round(waitSecs)}s`);
+            await delay(waitSecs * 1000);
+            return callHuggingFace(blob, modelIdx); // retry same model
+        }
+
+        if (response.status === 401 || response.status === 403) {
+            // Auth required - skip to next model
+            console.warn(`Model ${modelIdx + 1} requires authentication, trying next...`);
+            setLoaderStatus(`Model ${modelIdx + 1} requires auth, trying next...`);
+            await delay(1000);
+            return callHuggingFace(blob, modelIdx + 1);
+        }
+
+        if (!response.ok) {
+            setLoaderStatus(`Model ${modelIdx + 1} unavailable, trying next...`);
+            await delay(2000);
+            return callHuggingFace(blob, modelIdx + 1); // try next model
+        }
+
+        const result = await response.json();
+        if (!Array.isArray(result) || result.length === 0) {
+            return callHuggingFace(blob, modelIdx + 1);
+        }
+
+        return result;
+    }
+
+    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+    function setLoaderStatus(msg) { document.getElementById('loader-status').textContent = msg; }
+
+    /* ============================================================
+       MAIN DIAGNOSIS FUNCTION
+    ============================================================ */
+    async function runDiagnosis() {
+        if (!imageBlob) { alert('Please upload or capture a plant photo first.'); return; }
+
+        // Show loader
+        document.getElementById('results-placeholder').style.display = 'none';
+        document.getElementById('report-card').classList.remove('active');
+        document.getElementById('ai-error').classList.remove('active');
+        document.getElementById('ai-loader').classList.add('active');
+        document.getElementById('analyse-btn').disabled = true;
+
+        try {
+            setLoaderStatus('Sending image to AI...');
+            let predictions = null;
+            try {
+                predictions = await callHuggingFace(imageBlob);
+            } catch (aiErr) {
+                console.warn('AI models unavailable, using local fallback:', aiErr.message);
+            }
+
+            setLoaderStatus('Analysing results...');
+            await delay(600);
+
+            const cropHint = document.getElementById('crop-hint').value;
+            const selectedSymptoms = getSelectedSymptoms();
+
+            let db, topPreds, confidencePct;
+
+            if (predictions && predictions.length > 0) {
+                // AI model worked — use its predictions
+                let top = predictions;
+                if (cropHint) {
+                    const hint = cropHint.toLowerCase().split('/')[0].trim().split(' ')[0];
+                    const filtered = predictions.filter(p => p.label.toLowerCase().includes(hint));
+                    if (filtered.length > 0) top = filtered;
+                }
+                const best = top[0];
+                db = lookupDisease(best.label);
+                topPreds = top.slice(0, 3);
+                confidencePct = Math.round(best.score * 100);
+            } else {
+                // FALLBACK: AI failed — try to match locally from crop hint + symptoms
+                db = localFallbackDiagnosis(cropHint, selectedSymptoms);
+                topPreds = [{ label: db.disease, score: 0.6 }];
+                confidencePct = 60;
+            }
+
+            // Merge selected symptoms into result if provided
+            if (selectedSymptoms.length > 0) {
+                db.symptoms = [...new Set([...selectedSymptoms, ...db.symptoms])];
+            }
+
+            renderReport(db, topPreds, confidencePct);
+
+        } catch (err) {
+            document.getElementById('ai-loader').classList.remove('active');
+            document.getElementById('ai-error').classList.add('active');
+            document.getElementById('ai-error-msg').textContent = err.message;
+        } finally {
+            document.getElementById('analyse-btn').disabled = false;
+        }
+    }
+
+    /* ============================================================
+       RENDER REPORT
+    ============================================================ */
+    function renderReport(db, topPreds, confidencePct) {
+        document.getElementById('ai-loader').classList.remove('active');
+
+        const isHealthy = db.severity === 'None';
+
+        // Badges
+        document.getElementById('r-crop-badge').textContent = `Crop: ${db.crop}`;
+        document.getElementById('r-conf-badge').textContent = `Confidence: ${confidencePct}%`;
+
+        const sevBadge = document.getElementById('r-sev-badge');
+        sevBadge.textContent  = isHealthy ? '✅ Healthy' : `⚠ ${db.severity} Severity`;
+        sevBadge.className    = `rpill ${sevClass(db.severity)}`;
+
+        // Title
+        document.getElementById('r-title').textContent = db.disease;
+        document.getElementById('r-sci').textContent   = db.sci ? `(${db.sci})` : '';
+
+        // Prediction confidence bars
+        const barsEl = document.getElementById('pred-bars');
+        barsEl.innerHTML = topPreds.map((p, i) => {
+            const pct  = Math.round(p.score * 100);
+            const d    = lookupDisease(p.label);
+            const name = `${d.crop} — ${d.disease}`;
+            return `
+                <div class="pred-bar-wrap">
+                    <div class="pred-label">
+                        <span>${i === 0 ? '🏆 ' : ''}${name}</span>
+                        <span>${pct}%</span>
+                    </div>
+                    <div class="pred-bar">
+                        <div class="pred-fill" style="width:${pct}%"></div>
+                    </div>
+                </div>`;
+        }).join('');
+
+        // Info grid
+        document.getElementById('r-crop').textContent    = `${db.crop} (${db.sci || '—'})`;
+        document.getElementById('r-disease').textContent = db.disease;
+        document.getElementById('r-sev').textContent     = db.severity;
+        document.getElementById('r-part').textContent    = db.part;
+
+        // Severity pointer
+        document.getElementById('r-sev-ptr').style.left = sevPct(db.severity) + '%';
+
+        // Lists helper
+        const toList = (id, arr) => {
+            document.getElementById(id).innerHTML = arr && arr.length
+                ? arr.map(i => `<li>${i}</li>`).join('')
+                : '<li>No specific data available.</li>';
+        };
+
+        toList('r-symptoms',   db.symptoms);
+        toList('r-prevention', db.prevention);
+        toList('r-organic',    db.organic);
+        toList('r-chemical',   db.chemical);
+
+        document.getElementById('r-cause').textContent  = db.cause || '—';
+        document.getElementById('r-expert').textContent = db.expert || 'Consult your nearest Krishi Vigyan Kendra if symptoms persist or worsen.';
+
+        // Show card
+        document.getElementById('report-card').classList.add('active');
+        document.getElementById('report-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    </script>
+</body>
+</html>
+

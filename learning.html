@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agricultural Learning Hub & Guides | GROW</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="ASSISTS/LOGO/LOGO (2).PNG" alt="GROW Logo">
+                </a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="yield-calculator.html">Yield Calculator</a></li>
+                <li><a href="weather.html">Weather</a></li>
+                <li><a href="crop-doctor.html">Crop Doctor</a></li>
+                <li><a href="market.html">Market</a></li>
+                <li><a href="learning.html" class="active">Learning</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- PAGE HEADER -->
+        <section class="page-header">
+            <div class="page-header-content">
+                <span class="badge"><i class="fa-solid fa-graduation-cap"></i> Farmer Education & Government Schemes</span>
+                <h1>Smart Farming Learning & Govt Schemes Hub</h1>
+                <p>Master modern agricultural practices, bio-fertilizer preparation, drone technology, government subsidies, and access official government portals.</p>
+            </div>
+        </section>
+
+        <!-- LEARNING CONTENT -->
+        <section class="container section-padding">
+
+            <!-- Category Pills -->
+            <div class="filter-pills">
+                <button class="filter-btn active" onclick="filterLearning('all', this)">All Guides</button>
+                <button class="filter-btn" onclick="filterLearning('schemes', this)"><i class="fa-solid fa-hand-holding-dollar"></i> Govt Schemes & Subsidies</button>
+                <button class="filter-btn" onclick="filterLearning('portals', this)"><i class="fa-solid fa-globe"></i> Official Govt Portals</button>
+                <button class="filter-btn" onclick="filterLearning('organic', this)">Organic Farming</button>
+                <button class="filter-btn" onclick="filterLearning('tech', this)">Drones & Tech</button>
+                <button class="filter-btn" onclick="filterLearning('soil', this)">Soil & Pest Mgmt</button>
+            </div>
+
+            <!-- Learning Grid -->
+            <div class="grid-3" id="learning-grid">
+                <!-- Dynamic cards -->
+            </div>
+
+            <!-- OFFICIAL GOVERNMENT PORTALS SECTION -->
+            <div style="margin-top: 60px; border-top: 1px dashed #c8e6c9; padding-top: 40px;">
+                <div style="text-align: center; max-width: 700px; margin: 0 auto 30px;">
+                    <span class="badge" style="background: #E8F5E9; color: #2E7D32;"><i class="fa-solid fa-building-columns"></i> Official Government Websites</span>
+                    <h2 style="font-family: 'Poppins', sans-serif; font-size: 28px; color: #1b382b; margin-top: 8px;">Direct Official Agriculture Portals</h2>
+                    <p style="font-size: 15px; color: var(--text-secondary);">Access authentic Government of India portals for direct benefit transfers, crop insurance claims, online mandi bidding, and soil health reports.</p>
+                </div>
+
+                <div class="portal-grid">
+                    <!-- Portal Card 1 -->
+                    <div class="portal-card">
+                        <div>
+                            <div class="portal-header">
+                                <div class="portal-icon"><i class="fa-solid fa-hand-holding-hand"></i></div>
+                                <div class="portal-title">PM-KISAN Samman Nidhi</div>
+                            </div>
+                            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5;">Check your ₹6,000 annual installment status, update e-KYC, and register new farmer applications online.</p>
+                        </div>
+                        <a href="https://pmkisan.gov.in/" target="_blank" rel="noopener" class="external-link-btn">
+                            Visit PM-KISAN Portal <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+
+                    <!-- Portal Card 2 -->
+                    <div class="portal-card">
+                        <div>
+                            <div class="portal-header">
+                                <div class="portal-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                                <div class="portal-title">PM Fasal Bima Yojana</div>
+                            </div>
+                            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5;">Calculate insurance premiums, apply for crop loss compensation (flood/drought), and track claim status.</p>
+                        </div>
+                        <a href="https://pmfby.gov.in/" target="_blank" rel="noopener" class="external-link-btn">
+                            Visit PMFBY Insurance <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+
+                    <!-- Portal Card 3 -->
+                    <div class="portal-card">
+                        <div>
+                            <div class="portal-header">
+                                <div class="portal-icon"><i class="fa-solid fa-store"></i></div>
+                                <div class="portal-title">eNAM National Agriculture Market</div>
+                            </div>
+                            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5;">Pan-India electronic trading portal connecting 1,000+ mandis for competitive online bidding & direct payment.</p>
+                        </div>
+                        <a href="https://www.enam.gov.in/" target="_blank" rel="noopener" class="external-link-btn">
+                            Visit eNAM Portal <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+
+                    <!-- Portal Card 4 -->
+                    <div class="portal-card">
+                        <div>
+                            <div class="portal-header">
+                                <div class="portal-icon"><i class="fa-solid fa-vial-virus"></i></div>
+                                <div class="portal-title">National Soil Health Card</div>
+                            </div>
+                            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5;">Download official soil health cards, locate nearby testing laboratories, and get custom crop nutrient advice.</p>
+                        </div>
+                        <a href="https://soilhealth.dac.gov.in/" target="_blank" rel="noopener" class="external-link-btn">
+                            Visit Soil Health Portal <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+
+                    <!-- Portal Card 5 -->
+                    <div class="portal-card">
+                        <div>
+                            <div class="portal-header">
+                                <div class="portal-icon"><i class="fa-solid fa-tractor"></i></div>
+                                <div class="portal-title">Kisan Suvidha & Agricoop</div>
+                            </div>
+                            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5;">One-stop portal for certified seeds, agrochemical safety, farm machinery subsidies, and weather advisories.</p>
+                        </div>
+                        <a href="https://farmer.gov.in/" target="_blank" rel="noopener" class="external-link-btn">
+                            Visit Farmers' Portal <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+
+                    <!-- Portal Card 6 -->
+                    <div class="portal-card">
+                        <div>
+                            <div class="portal-header">
+                                <div class="portal-icon"><i class="fa-solid fa-user-graduate"></i></div>
+                                <div class="portal-title">ICAR Krishi Vigyan Kendra</div>
+                            </div>
+                            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5;">Connect with district agricultural scientists, attend free hands-on training, and get climate-resilient seeds.</p>
+                        </div>
+                        <a href="https://kvk.icar.gov.in/" target="_blank" rel="noopener" class="external-link-btn">
+                            Find Nearest KVK Center <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Article Reader Modal -->
+    <div class="modal-overlay" id="article-modal">
+        <div class="modal-box" style="max-width: 720px;">
+            <button class="modal-close" aria-label="Close modal">&times;</button>
+            <div id="article-modal-body">
+                <!-- Dynamic article content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <h3>#GROW</h3>
+        <p>LET YOUR KNOWLEDGE YIELD A BETTER FUTURE</p>
+        <p>© 2026 GROW. All Rights Reserved.</p>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        const articles = [
+            {
+                id: 1,
+                title: "PM-KISAN Samman Nidhi: Eligibility & Enrollment Guide 2026",
+                cat: "schemes",
+                read: "7 min read",
+                icon: "fa-hand-holding-dollar",
+                color: "#FFF8E1",
+                iconColor: "#F57F17",
+                desc: "Complete guide on receiving ₹6,000/year in 3 equal installments directly in your bank account via DBT.",
+                full: "Under the PM-KISAN Samman Nidhi Yojana, all landholding farmer families receive a financial benefit of ₹6,000 per year, payable in three equal installments of ₹2,000 every four months directly into their bank accounts.<br><br><strong>Eligibility:</strong> All landholding farmers cultivating agricultural land.<br><strong>Documents Required:</strong> Aadhaar Card, Land ownership document (Khatauni/7-12 excerpt), Bank Passbook, and Active Mobile Number.<br><strong>Step-by-Step Application:</strong><br>1. Visit the official website <strong>pmkisan.gov.in</strong> or your nearest Common Service Centre (CSC).<br>2. Complete your e-KYC using OTP or biometric verification.<br>3. Upload land registration documents under 'New Farmer Registration'.",
+                portalLink: "https://pmkisan.gov.in/"
+            },
+            {
+                id: 2,
+                title: "PMKSY Drip & Sprinkler Micro-Irrigation Subsidy (Up to 80% Grant)",
+                cat: "schemes",
+                read: "8 min read",
+                icon: "fa-droplet",
+                color: "#E8F5E9",
+                iconColor: "#2E7D32",
+                desc: "Save 50% water and boost crop yields with 55% to 80% government grants on drip lines & sprinklers.",
+                full: "Under Pradhan Mantri Krishi Sinchayee Yojana (PMKSY) - Per Drop More Crop, small and marginal farmers get up to 80% subsidy for installing micro-irrigation drip and sprinkler systems.<br><br><strong>Key Benefits:</strong> Water savings up to 60%, reduced weed growth, and 35% higher fertilizer efficiency.<br><strong>Documents Needed:</strong> Land ownership certificate, Aadhaar card, Bank passbook copy, Soil & Water test report.<br><strong>How to Apply:</strong> Register on your state horticulture/agriculture department portal or contact the district Assistant Director of Horticulture.",
+                portalLink: "https://pmksy.gov.in/"
+            },
+            {
+                id: 3,
+                title: "PM-KUSUM Solar Agriculture Pump Scheme (90% Combined Subsidy)",
+                cat: "schemes",
+                read: "6 min read",
+                icon: "fa-solar-panel",
+                color: "#E0F2F1",
+                iconColor: "#00695C",
+                desc: "Switch from expensive diesel pumps to 100% solar powered irrigation with 90% combined central & state subsidy.",
+                full: "The PM-KUSUM scheme enables farmers to install standalone solar agriculture pumps of up to 7.5 HP capacity. The farmer pays only 10% of total pump cost, while Central & State governments provide 30%+30% subsidy, with low-interest bank loans covering the remaining 30%.<br><br><strong>Benefits:</strong> Daytime reliable irrigation without electricity grid dependency, zero fuel cost, and ability to sell surplus solar power back to DISCOM.",
+                portalLink: "https://pmkusum.mnre.gov.in/"
+            },
+            {
+                id: 4,
+                title: "PMFBY Crop Insurance: How to Claim Losses for Flood & Drought",
+                cat: "schemes",
+                read: "9 min read",
+                icon: "fa-shield-halved",
+                color: "#FFEBEE",
+                iconColor: "#C62828",
+                desc: "Protect your crop against unseasonal rain, pests & droughts with nominal 1.5% - 2% premium.",
+                full: "Pradhan Mantri Fasal Bima Yojana (PMFBY) provides full insurance coverage against crop loss caused by non-preventable natural risks.<br><br><strong>Premium Rates:</strong><br>• Kharif crops: 2.0% of sum insured<br>• Rabi crops: 1.5% of sum insured<br>• Commercial/Horticultural crops: 5.0%<br><strong>Claim Reporting:</strong> Intimate crop damage within 72 hours via the Crop Insurance App or toll-free helpline 1800-200-5142.",
+                portalLink: "https://pmfby.gov.in/"
+            },
+            {
+                id: 5,
+                title: "Kisan Drone & Farm Machinery Subsidy (SMAM Scheme)",
+                cat: "schemes",
+                read: "7 min read",
+                icon: "fa-plane-up",
+                color: "#E3F2FD",
+                iconColor: "#1565C0",
+                desc: "Claim 50% to 80% financial assistance for purchasing Kisan Drones, rotavators, and harvesters.",
+                full: "Sub-Mission on Agricultural Mechanization (SMAM) provides financial grants ranging from 40% to 80% for purchasing agricultural drones and modern farm machinery.<br><br><strong>Drone Subsidy Details:</strong> Up to 50% (max ₹5 Lakhs) subsidy for individual farmers, and up to 80% (max ₹8 Lakhs) for Custom Hiring Centres (CHCs) and FPOs to provide spraying services to local farmers.",
+                portalLink: "https://agrimachinery.nic.in/"
+            },
+            {
+                id: 6,
+                title: "Complete Guide to Zero Budget Natural Farming (ZBNF)",
+                cat: "organic",
+                read: "6 min read",
+                icon: "fa-seedling",
+                color: "#E8F5E9",
+                iconColor: "#2E7D32",
+                desc: "Learn how to prepare Jeevamrutha and Beejamrutha using cow dung and urine to eliminate costly chemical inputs.",
+                full: "Zero Budget Natural Farming (ZBNF) is a set of farming methods that involve zero credit for purchasing chemical inputs. Jeevamrutha is prepared by mixing 10kg cow dung, 10 liters cow urine, 2kg jaggery, and 2kg pulse flour in 200L water. Ferment for 48 hours and apply via irrigation channels twice a month."
+            },
+            {
+                id: 7,
+                title: "Soil Organic Carbon: How to Raise SOC from 0.4% to 1.0%",
+                cat: "soil",
+                read: "7 min read",
+                icon: "fa-mound",
+                color: "#EFEBE9",
+                iconColor: "#4E342E",
+                desc: "Improve soil water retention and nutrient exchange by incorporating green manure crops like Dhaincha.",
+                full: "Soil Organic Carbon (SOC) is the foundation of soil fertility. Sowing Green Manure crops like Dhaincha (Sesbania) or Sunhemp 45 days before paddy transplanting and plowing them into the soil adds 15-20 tonnes of organic green matter per hectare."
+            },
+            {
+                id: 8,
+                title: "Biological Pest Management: Pheromone Traps & Sticky Cards",
+                cat: "soil",
+                read: "5 min read",
+                icon: "fa-bug",
+                color: "#FFEBEE",
+                iconColor: "#C62828",
+                desc: "Target specific pest species like Stem Borer and Pink Bollworm without harming beneficial predators.",
+                full: "Pheromone traps lure male moths using synthetic sex hormones, preventing mating and egg laying. Installing 5 Funnel Traps per acre with Spodoptera lures effectively suppresses armyworm infestations in maize and vegetables."
+            }
+        ];
+
+        function renderArticles(items) {
+            const container = document.getElementById('learning-grid');
+            container.innerHTML = items.map(a => `
+                <div class="crop-card">
+                    <div class="crop-image-placeholder" style="background: ${a.color}; color: ${a.iconColor};">
+                        <i class="fa-solid ${a.icon}"></i>
+                    </div>
+                    <div class="crop-content">
+                        <div class="crop-tag">${a.cat.toUpperCase()} • ${a.read}</div>
+                        <div class="crop-title">${a.title}</div>
+                        <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">${a.desc}</p>
+                        
+                        <button class="primary-btn" style="width: 100%; justify-content: center; font-size: 14px;" onclick="readArticle(${a.id})">
+                            <i class="fa-solid fa-book-open-reader"></i> Read Full Guide
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterLearning(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            if (cat === 'all') {
+                renderArticles(articles);
+            } else if (cat === 'portals') {
+                // Scroll to official portals section
+                const portalSec = document.querySelector('.portal-grid');
+                if (portalSec) portalSec.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                renderArticles(articles.filter(a => a.cat === cat));
+            }
+        }
+
+        function readArticle(id) {
+            const article = articles.find(a => a.id === id);
+            if (!article) return;
+
+            const modalBody = document.getElementById('article-modal-body');
+            modalBody.innerHTML = `
+                <span class="badge" style="background: ${article.color}; color: ${article.iconColor}; font-weight:700;">${article.cat.toUpperCase()}</span>
+                <h2 style="font-family:'Poppins', sans-serif; font-size: 24px; margin: 12px 0 8px; color: var(--text-primary);">${article.title}</h2>
+                <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;"><i class="fa-regular fa-clock"></i> ${article.read} • GROW Official Knowledge Base</div>
+                
+                <div style="font-size: 15px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 24px;">
+                    ${article.full}
+                </div>
+
+                ${article.portalLink ? `
+                    <div style="background: #E8F5E9; padding: 18px; border-radius: 14px; border: 1px solid #C8E6C9; margin-bottom: 24px;">
+                        <h4 style="color: #1b382b; font-family:'Poppins', sans-serif; margin-bottom: 6px;"><i class="fa-solid fa-building-columns"></i> Ready to Apply?</h4>
+                        <p style="font-size: 13.5px; color: #444; margin-bottom: 12px;">Visit the official government application portal to check eligibility and register.</p>
+                        <a href="${article.portalLink}" target="_blank" rel="noopener" class="primary-btn" style="display: inline-flex; font-size: 13px; padding: 10px 20px;">
+                            Open Official Govt Website <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+                ` : ''}
+
+                <button class="primary-btn" style="width: 100%; justify-content: center; background: #555555;" onclick="document.getElementById('article-modal').classList.remove('active')">
+                    Close Guide
+                </button>
+            `;
+            openModal('article-modal');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderArticles(articles);
+        });
+    </script>
+</body>
+
+</html>

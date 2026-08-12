@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agriculture Weather Forecast | GROW</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ---- Loading Spinner ---- */
+        .weather-loader {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--primary-color);
+        }
+
+        .weather-loader.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #E8F5E9;
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ---- Error Banner ---- */
+        .weather-error {
+            display: none;
+            background: #FFF3F3;
+            border-left: 5px solid #D32F2F;
+            border-radius: 12px;
+            padding: 20px 24px;
+            color: #C62828;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        .weather-error.active {
+            display: block;
+        }
+
+        /* ---- Advisory Card dynamic ---- */
+        .advisory-safe {
+            background: #E8F5E9;
+            border-left-color: #2E7D32;
+        }
+
+        .advisory-warn {
+            background: #FFF8E1;
+            border-left-color: #F9A825;
+        }
+
+        .advisory-alert {
+            background: #FFF3F3;
+            border-left-color: #D32F2F;
+        }
+
+        /* ---- Popular city chips ---- */
+        .city-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .city-chip {
+            padding: 7px 16px;
+            border-radius: 50px;
+            border: 1.5px solid var(--border-color);
+            background: #fff;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .city-chip:hover {
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+
+        /* ---- UV Index bar ---- */
+        .uv-bar {
+            height: 8px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #00C853, #FFD600, #FF6D00, #D50000);
+            margin-top: 6px;
+            position: relative;
+        }
+
+        .uv-marker {
+            position: absolute;
+            top: -4px;
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border: 3px solid #333;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            transition: left 0.6s ease;
+        }
+
+        /* ---- Forecast card enhancements ---- */
+        .forecast-card .rain-bar {
+            height: 4px;
+            background: #E3F2FD;
+            border-radius: 4px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+
+        .forecast-card .rain-fill {
+            height: 100%;
+            background: #42A5F5;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="ASSISTS/LOGO/LOGO (2).PNG" alt="GROW Logo">
+                </a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="yield-calculator.html">Yield Calculator</a></li>
+                <li><a href="weather.html" class="active">Weather</a></li>
+                <li><a href="crop-doctor.html">Crop Doctor</a></li>
+                <li><a href="market.html">Market</a></li>
+                <li><a href="learning.html">Learning</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- PAGE HEADER -->
+        <section class="page-header">
+            <div class="page-header-content">
+                <h1>Agri-Weather &amp; Spray Advisory</h1>
+                <p>Real-time weather data, humidity tracking, rainfall alerts, and farming action advice — powered by
+                    live meteorological data.</p>
+            </div>
+        </section>
+
+        <!-- WEATHER CONTENT -->
+        <section class="container section-padding">
+            <div class="weather-dashboard">
+
+                <!-- Search Bar -->
+                <div class="market-search-bar" style="align-items: center; margin-bottom: 16px;">
+                    <i class="fa-solid fa-location-dot" style="font-size: 24px; color: var(--primary-color);"></i>
+                    <input type="text" id="weather-city-input" class="form-control"
+                        placeholder="Enter city or district name (e.g. Mumbai, Nashik, Ludhiana)..." value="">
+                    <button class="primary-btn" id="weather-search-btn" onclick="searchWeather()">
+                        <i class="fa-solid fa-magnifying-glass"></i> Search
+                    </button>
+                    <button class="secondary-btn" onclick="getMyLocation()" title="Use my GPS location">
+                        <i class="fa-solid fa-crosshairs"></i>
+                    </button>
+                </div>
+
+                <!-- Popular City Quick-Select -->
+                <div class="city-chips">
+                    <span class="city-chip" onclick="quickCity('Mumbai')"> Mumbai</span>
+                    <span class="city-chip" onclick="quickCity('Nashik')"> Nashik</span>
+                    <span class="city-chip" onclick="quickCity('Ludhiana')"> Ludhiana</span>
+                    <span class="city-chip" onclick="quickCity('Hyderabad')"> Hyderabad</span>
+                    <span class="city-chip" onclick="quickCity('Bengaluru')"> Bengaluru</span>
+                    <span class="city-chip" onclick="quickCity('Delhi')"> Delhi</span>
+                    <span class="city-chip" onclick="quickCity('Jaipur')"> Jaipur</span>
+                    <span class="city-chip" onclick="quickCity('Pune')"> Pune</span>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div class="weather-loader" id="weather-loader">
+                    <div class="spinner"></div>
+                    <p style="font-weight:600; font-size:16px;">Fetching live weather data...</p>
+                </div>
+
+                <!-- Error Banner -->
+                <div class="weather-error" id="weather-error">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <strong> City not found.</strong> Please check the spelling and try again. Example: <em>Nashik</em>,
+                    <em>Ludhiana</em>, <em>Patna</em>.
+                </div>
+
+                <!-- Current Weather Card -->
+                <div id="weather-results" style="display:none;">
+
+                    <div class="weather-current-card" id="weather-current-card">
+                        <div>
+                            <span
+                                style="background: rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;"
+                                id="w-location">
+                                <i class="fa-solid fa-location-arrow"></i> —
+                            </span>
+                            <div class="weather-main-info">
+                                <i class="fa-solid fa-sun forecast-icon" style="font-size: 70px; color: #FFE082;"
+                                    id="w-main-icon"></i>
+                                <div>
+                                    <div class="temp-large" id="w-temp">—°C</div>
+                                    <div style="font-size: 18px; font-weight: 500;" id="w-condition">—</div>
+                                </div>
+                            </div>
+                            <p style="font-size: 14px; opacity: 0.9;" id="w-updated">
+                                <i class="fa-regular fa-clock"></i> —
+                            </p>
+                        </div>
+
+                        <div class="weather-details-grid">
+                            <div class="weather-detail-item">
+                                <i class="fa-solid fa-droplet" style="font-size: 22px; color: #80DEEA;"></i>
+                                <div>
+                                    <div style="font-size: 12px; opacity: 0.8;">Humidity</div>
+                                    <strong id="w-humidity">—</strong>
+                                </div>
+                            </div>
+                            <div class="weather-detail-item">
+                                <i class="fa-solid fa-cloud-showers-heavy" style="font-size: 22px; color: #90CAF9;"></i>
+                                <div>
+                                    <div style="font-size: 12px; opacity: 0.8;">Rain Probability</div>
+                                    <strong id="w-rain">—</strong>
+                                </div>
+                            </div>
+                            <div class="weather-detail-item">
+                                <i class="fa-solid fa-wind" style="font-size: 22px; color: #E0E0E0;"></i>
+                                <div>
+                                    <div style="font-size: 12px; opacity: 0.8;">Wind Speed</div>
+                                    <strong id="w-wind">—</strong>
+                                </div>
+                            </div>
+                            <div class="weather-detail-item">
+                                <i class="fa-solid fa-temperature-arrow-up"
+                                    style="font-size: 22px; color: #FFCC80;"></i>
+                                <div>
+                                    <div style="font-size: 12px; opacity: 0.8;">Feels Like</div>
+                                    <strong id="w-feels">—</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Extra Metrics Row -->
+                    <div class="grid-3" style="margin-bottom: 30px; gap: 20px;">
+                        <div class="card" style="text-align:center;">
+                            <i class="fa-solid fa-eye"
+                                style="font-size:30px; color: var(--primary-color); margin-bottom:8px;"></i>
+                            <div style="font-size:13px; color:var(--text-secondary);">Visibility</div>
+                            <div style="font-size:22px; font-weight:700;" id="w-visibility">—</div>
+                        </div>
+                        <div class="card" style="text-align:center;">
+                            <i class="fa-solid fa-sun" style="font-size:30px; color: #FF9800; margin-bottom:8px;"></i>
+                            <div style="font-size:13px; color:var(--text-secondary);">UV Index</div>
+                            <div style="font-size:22px; font-weight:700;" id="w-uv">—</div>
+                            <div class="uv-bar">
+                                <div class="uv-marker" id="uv-marker" style="left:0%"></div>
+                            </div>
+                        </div>
+                        <div class="card" style="text-align:center;">
+                            <i class="fa-solid fa-cloud-rain"
+                                style="font-size:30px; color: #42A5F5; margin-bottom:8px;"></i>
+                            <div style="font-size:13px; color:var(--text-secondary);">Today's Rainfall</div>
+                            <div style="font-size:22px; font-weight:700;" id="w-precip">—</div>
+                        </div>
+                    </div>
+
+                    <!-- Farming Advisory -->
+                    <div class="card advisory-safe" id="advisory-card"
+                        style="margin-bottom: 40px; border-left: 6px solid #2E7D32;">
+                        <div style="display: flex; gap: 20px; align-items: start;">
+                            <i class="fa-solid fa-triangle-exclamation" id="advisory-icon"
+                                style="font-size: 32px; color: #2E7D32; margin-top: 4px;"></i>
+                            <div>
+                                <h3 style="font-family:'Poppins', sans-serif; font-size: 20px; color: #1B5E20; margin-bottom: 6px;"
+                                    id="advisory-title">
+                                    Today's Farm Advisory
+                                </h3>
+                                <p style="font-size: 15px; line-height: 1.7;" id="advisory-text">
+                                    Fetching advisory...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 7-Day Forecast -->
+                    <h3
+                        style="font-family:'Poppins', sans-serif; font-size: 24px; margin-bottom: 20px; color: var(--text-primary);">
+                        <i class="fa-solid fa-calendar-days" style="color: var(--primary-color);"></i> 7-Day
+                        Agricultural Forecast
+                    </h3>
+                    <div class="weather-forecast-grid" id="forecast-container"></div>
+
+                </div><!-- /weather-results -->
+
+                <!-- Initial Placeholder (shown before any search) -->
+                <div id="weather-placeholder"
+                    style="text-align:center; padding: 60px 20px; color: var(--text-secondary);">
+                    <i class="fa-solid fa-cloud-sun"
+                        style="font-size: 70px; color: var(--primary-color); margin-bottom: 20px; display:block;"></i>
+                    <h3
+                        style="font-family:'Poppins',sans-serif; font-size:22px; margin-bottom:10px; color:var(--text-primary);">
+                        Search any city above</h3>
+                    <p>Or click a quick-select chip to load live weather instantly.</p>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <h3>#GROW</h3>
+        <p>LET YOUR KNOWLEDGE YIELD A BETTER FUTURE</p>
+        <p>© 2026 GROW. All Rights Reserved.</p>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        /* =====================================================
+           LIVE WEATHER ENGINE
+           APIs used (both FREE, no API key required):
+             • Nominatim (OpenStreetMap) — city → lat/lon
+             • Open-Meteo — lat/lon → real weather data
+        ===================================================== */
+
+        const WMO_CODES = {
+            0: { label: "Clear Sky", icon: "fa-sun", color: "#FFD54F" },
+            1: { label: "Mainly Clear", icon: "fa-sun", color: "#FFD54F" },
+            2: { label: "Partly Cloudy", icon: "fa-cloud-sun", color: "#FFB74D" },
+            3: { label: "Overcast", icon: "fa-cloud", color: "#90A4AE" },
+            45: { label: "Foggy", icon: "fa-smog", color: "#B0BEC5" },
+            48: { label: "Freezing Fog", icon: "fa-smog", color: "#B0BEC5" },
+            51: { label: "Light Drizzle", icon: "fa-cloud-drizzle", color: "#80DEEA" },
+            53: { label: "Moderate Drizzle", icon: "fa-cloud-drizzle", color: "#80DEEA" },
+            55: { label: "Dense Drizzle", icon: "fa-cloud-drizzle", color: "#80DEEA" },
+            61: { label: "Slight Rain", icon: "fa-cloud-rain", color: "#64B5F6" },
+            63: { label: "Moderate Rain", icon: "fa-cloud-rain", color: "#42A5F5" },
+            65: { label: "Heavy Rain", icon: "fa-cloud-showers-heavy", color: "#1E88E5" },
+            71: { label: "Slight Snowfall", icon: "fa-snowflake", color: "#E0F7FA" },
+            73: { label: "Moderate Snow", icon: "fa-snowflake", color: "#B2EBF2" },
+            75: { label: "Heavy Snow", icon: "fa-snowflake", color: "#B2EBF2" },
+            80: { label: "Slight Rain Showers", icon: "fa-cloud-sun-rain", color: "#64B5F6" },
+            81: { label: "Moderate Showers", icon: "fa-cloud-sun-rain", color: "#42A5F5" },
+            82: { label: "Violent Showers", icon: "fa-cloud-showers-heavy", color: "#1565C0" },
+            95: { label: "Thunderstorm", icon: "fa-cloud-bolt", color: "#7E57C2" },
+            96: { label: "Thunderstorm w/ Hail", icon: "fa-cloud-bolt", color: "#6A1B9A" },
+            99: { label: "Heavy Thunderstorm", icon: "fa-cloud-bolt", color: "#4A148C" }
+        };
+
+        function getWmo(code) {
+            return WMO_CODES[code] || { label: "Unknown", icon: "fa-cloud", color: "#90A4AE" };
+        }
+
+        function windDir(deg) {
+            const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+            return dirs[Math.round(deg / 45) % 8];
+        }
+
+        function uvLabel(uv) {
+            if (uv <= 2) return "Low";
+            if (uv <= 5) return "Moderate";
+            if (uv <= 7) return "High";
+            if (uv <= 10) return "Very High";
+            return "Extreme";
+        }
+
+        function farmingAdvisory(current, daily) {
+            const wind = current.windspeed;
+            const rain = daily.precipitation_probability_max[0];
+            const precip = daily.precipitation_sum[0];
+            const code = current.weathercode;
+
+            let type = "safe", title = "✅ Good Farming Day", text = "";
+
+            if (rain > 70 || code >= 80) {
+                type = "alert";
+                title = "🚨 Rain Alert — Avoid Field Operations";
+                text = `<strong>Spray Advisory:</strong> Do NOT spray pesticides or fertilizers today. High rain probability (${rain}%) will wash away chemicals and waste resources.<br>
+                     <strong>Irrigation:</strong> Skip irrigation — natural rainfall expected (${precip} mm). Check drainage channels to prevent waterlogging.<br>
+                     <strong>Harvesting:</strong> Delay harvesting. Wet conditions increase crop damage and fungal risk.`;
+            } else if (rain > 40) {
+                type = "warn";
+                title = "⚠️ Moderate Rain Risk — Proceed with Caution";
+                text = `<strong>Spray Advisory:</strong> Marginal conditions. Complete all spraying before 10:00 AM if necessary. Rain probability is ${rain}%.<br>
+                     <strong>Irrigation:</strong> Reduce irrigation quantity by 50%. Monitor soil moisture closely.<br>
+                     <strong>Harvesting:</strong> Early morning harvesting possible. Avoid afternoon field work.`;
+            } else if (wind > 20) {
+                type = "warn";
+                title = "⚠️ High Wind — Avoid Spraying";
+                text = `<strong>Spray Advisory:</strong> Wind speed (${wind.toFixed(1)} km/h) is too high for effective spraying. Chemical drift may harm neighbouring crops.<br>
+                     <strong>Irrigation:</strong> Drip or furrow irrigation recommended over overhead sprinklers in high wind.<br>
+                     <strong>Harvesting:</strong> Light harvesting possible. Secure any covered crops or nets.`;
+            } else {
+                text = `<strong>Spray Advisory:</strong> Excellent conditions for foliar spray. Wind is calm (${wind.toFixed(1)} km/h) and rain probability is low (${rain}%). Spray until 4:00 PM for best results.<br>
+                     <strong>Irrigation:</strong> Irrigate as per crop schedule. Soil conditions are normal.<br>
+                     <strong>Harvesting:</strong> Ideal day for harvesting. Clear skies and low humidity reduce post-harvest spoilage.`;
+            }
+
+            const card = document.getElementById('advisory-card');
+            const icon = document.getElementById('advisory-icon');
+            card.className = `card advisory-${type}`;
+            card.style.borderLeft = `6px solid ${type === 'safe' ? '#2E7D32' : type === 'warn' ? '#F9A825' : '#D32F2F'}`;
+            icon.style.color = type === 'safe' ? '#2E7D32' : type === 'warn' ? '#F9A825' : '#D32F2F';
+            document.getElementById('advisory-title').textContent = title;
+            document.getElementById('advisory-text').innerHTML = text;
+        }
+
+        async function geocode(cityName) {
+            const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(cityName)}&format=json&limit=1`;
+            const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+            const data = await res.json();
+            if (!data.length) throw new Error("City not found");
+            return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), display: data[0].display_name.split(',').slice(0, 2).join(', ') };
+        }
+
+        async function fetchWeather(lat, lon) {
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`
+                + `&current_weather=true`
+                + `&hourly=relativehumidity_2m,apparent_temperature,precipitation_probability,visibility,uv_index`
+                + `&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,windspeed_10m_max`
+                + `&timezone=auto&forecast_days=7`;
+            const res = await fetch(url);
+            return await res.json();
+        }
+
+        function show(id) { document.getElementById(id).style.display = ''; }
+        function hide(id) { document.getElementById(id).style.display = 'none'; }
+        function showEl(id, cls) { document.getElementById(id).classList.add(cls); }
+        function hideEl(id, cls) { document.getElementById(id).classList.remove(cls); }
+
+        async function loadWeather(cityName) {
+            // Reset UI
+            hide('weather-results');
+            hide('weather-placeholder');
+            hide('weather-error');
+            document.getElementById('weather-loader').classList.add('active');
+            document.getElementById('weather-error').classList.remove('active');
+
+            try {
+                const geo = await geocode(cityName);
+                const data = await fetchWeather(geo.lat, geo.lon);
+
+                const cw = data.current_weather;
+                const hourly = data.hourly;
+                const daily = data.daily;
+
+                // Pick current hour index for hourly data
+                const now = new Date(cw.time);
+                const hour = now.getHours();
+
+                const humidity = hourly.relativehumidity_2m[hour] ?? hourly.relativehumidity_2m[0];
+                const feelsLike = hourly.apparent_temperature[hour] ?? hourly.apparent_temperature[0];
+                const rainProb = hourly.precipitation_probability[hour] ?? daily.precipitation_probability_max[0];
+                const visibility = hourly.visibility[hour] ?? 10000;
+                const uvIndex = hourly.uv_index[hour] ?? 0;
+                const precip = daily.precipitation_sum[0];
+
+                const wmo = getWmo(cw.weathercode);
+
+                // --- Update Current Card ---
+                document.getElementById('w-location').innerHTML = `<i class="fa-solid fa-location-arrow"></i> ${geo.display}`;
+                document.getElementById('w-temp').textContent = `${Math.round(cw.temperature)}°C`;
+                document.getElementById('w-condition').textContent = wmo.label;
+
+                const iconEl = document.getElementById('w-main-icon');
+                iconEl.className = `fa-solid ${wmo.icon}`;
+                iconEl.style.color = wmo.color;
+                iconEl.style.fontSize = '70px';
+
+                const high = Math.round(daily.temperature_2m_max[0]);
+                const low = Math.round(daily.temperature_2m_min[0]);
+                const updatedTime = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('w-updated').innerHTML =
+                    `<i class="fa-regular fa-clock"></i> Updated at ${updatedTime} &nbsp;|&nbsp; High ${high}°C / Low ${low}°C`;
+
+                document.getElementById('w-humidity').textContent = `${humidity}%`;
+                document.getElementById('w-rain').textContent = `${rainProb}%`;
+                document.getElementById('w-wind').textContent = `${cw.windspeed.toFixed(1)} km/h ${windDir(cw.winddirection)}`;
+                document.getElementById('w-feels').textContent = `${Math.round(feelsLike)}°C`;
+
+                // Extra metrics
+                const visKm = (visibility / 1000).toFixed(1);
+                document.getElementById('w-visibility').textContent = `${visKm} km`;
+                document.getElementById('w-uv').textContent = `${uvIndex.toFixed(0)} (${uvLabel(uvIndex)})`;
+                document.getElementById('w-precip').textContent = `${precip.toFixed(1)} mm`;
+
+                // UV Marker position (0–11+ → 0–100%)
+                const uvPct = Math.min(parseFloat(uvIndex) / 11 * 100, 100);
+                document.getElementById('uv-marker').style.left = uvPct + '%';
+
+                // Farming Advisory
+                farmingAdvisory(cw, daily);
+
+                // 7-Day Forecast
+                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                const container = document.getElementById('forecast-container');
+                container.innerHTML = daily.time.map((dateStr, i) => {
+                    const d = new Date(dateStr);
+                    const dayLabel = i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : days[d.getDay()];
+                    const w = getWmo(daily.weathercode[i]);
+                    const maxT = Math.round(daily.temperature_2m_max[i]);
+                    const minT = Math.round(daily.temperature_2m_min[i]);
+                    const rp = daily.precipitation_probability_max[i];
+                    const wind = daily.windspeed_10m_max[i].toFixed(0);
+
+                    // Advisory tag per day
+                    let advTag = "Good Day";
+                    let advColor = "#2E7D32";
+                    if (rp > 70) { advTag = "Avoid Spraying"; advColor = "#D32F2F"; }
+                    else if (rp > 40) { advTag = "Caution"; advColor = "#F9A825"; }
+                    else if (daily.windspeed_10m_max[i] > 20) { advTag = "High Wind"; advColor = "#F9A825"; }
+
+                    return `
+                    <div class="forecast-card">
+                        <div class="forecast-day">${dayLabel}</div>
+                        <i class="fa-solid ${w.icon} forecast-icon" style="color:${w.color};"></i>
+                        <div class="forecast-temp">${maxT}° / ${minT}°</div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+                            <i class="fa-solid fa-droplet" style="color:#90CAF9;"></i> ${rp}%
+                        </div>
+                        <div class="rain-bar"><div class="rain-fill" style="width:${rp}%;"></div></div>
+                        <div style="font-size: 11px; font-weight: 600; color: ${advColor}; background: ${advColor}18;
+                                    padding: 4px 6px; border-radius: 6px; margin-top: 10px;">
+                            ${advTag}
+                        </div>
+                        <div style="font-size: 11px; color:var(--text-muted); margin-top: 4px;">
+                            <i class="fa-solid fa-wind"></i> ${wind} km/h
+                        </div>
+                    </div>`;
+                }).join('');
+
+                // Show results
+                document.getElementById('weather-loader').classList.remove('active');
+                show('weather-results');
+
+            } catch (err) {
+                document.getElementById('weather-loader').classList.remove('active');
+                document.getElementById('weather-error').classList.add('active');
+                show('weather-placeholder');
+                console.error(err);
+            }
+        }
+
+        function searchWeather() {
+            const city = document.getElementById('weather-city-input').value.trim();
+            if (!city) return;
+            loadWeather(city);
+        }
+
+        function quickCity(name) {
+            document.getElementById('weather-city-input').value = name;
+            loadWeather(name);
+        }
+
+        function getMyLocation() {
+            if (!navigator.geolocation) {
+                alert("Geolocation is not supported by your browser.");
+                return;
+            }
+            hide('weather-results');
+            hide('weather-placeholder');
+            document.getElementById('weather-loader').classList.add('active');
+
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                const { latitude: lat, longitude: lon } = pos.coords;
+                try {
+                    // Reverse geocode to get city name
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+                    const data = await res.json();
+                    const city = data.address.city || data.address.town || data.address.village || "Your Location";
+                    document.getElementById('weather-city-input').value = city;
+                    await loadWeather(city);
+                } catch {
+                    document.getElementById('weather-loader').classList.remove('active');
+                    document.getElementById('weather-error').classList.add('active');
+                    show('weather-placeholder');
+                }
+            }, () => {
+                document.getElementById('weather-loader').classList.remove('active');
+                alert("Could not get your location. Please allow location access and try again.");
+            });
+        }
+
+        // Allow Enter key in input
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('weather-city-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchWeather();
+            });
+
+            // Auto-load a default city
+            loadWeather('Nashik');
+        });
+    </script>
+</body>
+
+</html>

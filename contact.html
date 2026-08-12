@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact & Kisan Helpline | GROW</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="ASSISTS/LOGO/LOGO (2).PNG" alt="GROW Logo">
+                </a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="yield-calculator.html">Yield Calculator</a></li>
+                <li><a href="weather.html">Weather</a></li>
+                <li><a href="crop-doctor.html">Crop Doctor</a></li>
+                <li><a href="market.html">Market</a></li>
+                <li><a href="learning.html">Learning</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- PAGE HEADER -->
+        <section class="page-header">
+            <div class="page-header-content">
+                <span class="badge"><i class="fa-solid fa-headset"></i> 24/7 Farmer Support</span>
+                <h1>Get in Touch with GROW</h1>
+                <p>Have questions about crop diseases, yield estimates, or government schemes? Our expert team is here
+                    to assist you.</p>
+            </div>
+        </section>
+
+        <!-- CONTACT CONTENT -->
+        <section class="container section-padding">
+
+            <!-- Quick Contact Cards -->
+            <div class="grid-3" style="margin-bottom: 50px;">
+                <div class="card" style="text-align: center;">
+                    <div class="service-icon" style="margin: 0 auto 16px;">
+                        <i class="fa-solid fa-phone-volume"></i>
+                    </div>
+                    <h3 style="font-family:'Poppins', sans-serif; font-size: 20px;">Toll-Free Helpline</h3>
+                    <p style="color: var(--text-secondary); margin: 8px 0 12px;">Call our agricultural experts free of
+                        charge.</p>
+                    <a href="tel:18001801551"
+                        style="font-size: 20px; font-weight: 700; color: var(--primary-color); text-decoration: none;">1800-180-1551</a>
+                </div>
+
+                <div class="card" style="text-align: center;">
+                    <div class="service-icon" style="margin: 0 auto 16px; background: #E8F5E9; color: #2E7D32;">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <h3 style="font-family:'Poppins', sans-serif; font-size: 20px;">WhatsApp Advisory</h3>
+                    <p style="color: var(--text-secondary); margin: 8px 0 12px;">Send leaf photos directly on WhatsApp.
+                    </p>
+                    <a href="https://wa.me/919876543210" target="_blank"
+                        style="font-size: 18px; font-weight: 700; color: #2E7D32; text-decoration: none;">+91 98765
+                        43210</a>
+                </div>
+
+                <div class="card" style="text-align: center;">
+                    <div class="service-icon" style="margin: 0 auto 16px; background: #E3F2FD; color: #1565C0;">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <h3 style="font-family:'Poppins', sans-serif; font-size: 20px;">Email Desk</h3>
+                    <p style="color: var(--text-secondary); margin: 8px 0 12px;">For institutional and government
+                        inquiries.</p>
+                    <a href="mailto:support@grow-agri.org"
+                        style="font-size: 16px; font-weight: 700; color: #1565C0; text-decoration: none;">support@grow-agri.org</a>
+                </div>
+            </div>
+
+            <!-- Form & FAQ Wrapper -->
+            <div class="grid-2" style="align-items: start;">
+
+                <!-- Contact Form Card -->
+                <div class="card" style="padding: 40px;">
+                    <h2
+                        style="font-family:'Poppins', sans-serif; font-size: 24px; color: var(--primary-dark); margin-bottom: 20px;">
+                        <i class="fa-solid fa-paper-plane" style="color: var(--primary-color);"></i> Send Us a Message
+                    </h2>
+
+                    <form id="contact-form" onsubmit="event.preventDefault(); submitContactForm();">
+                        <div class="form-group">
+                            <label for="c-name">Full Name</label>
+                            <input type="text" id="c-name" class="form-control" placeholder="Ramesh Kumar" required>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label for="c-phone">Phone Number</label>
+                                <input type="tel" id="c-phone" class="form-control" placeholder="+91 9876543210"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="c-district">District & State</label>
+                                <input type="text" id="c-district" class="form-control" placeholder="Ludhiana, Punjab"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="c-category">Inquiry Subject</label>
+                            <select id="c-category" class="form-control">
+                                <option value="disease">Crop Disease & Pest Help</option>
+                                <option value="yield">Yield Calculator Assistance</option>
+                                <option value="market">Mandi Rate Query</option>
+                                <option value="scheme">Government Scheme Registration</option>
+                                <option value="other">Other Inquiry</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="c-message">Describe Your Problem / Question</label>
+                            <textarea id="c-message" class="form-control" rows="4"
+                                placeholder="Mention crop type, field area, and symptoms observed..."
+                                required></textarea>
+                        </div>
+
+                        <button type="submit" class="primary-btn" style="width: 100%; justify-content: center;">
+                            <i class="fa-solid fa-paper-plane"></i> Submit Query
+                        </button>
+                    </form>
+                </div>
+
+                <!-- FAQ Accordion -->
+                <div id="faq">
+                    <h2
+                        style="font-family:'Poppins', sans-serif; font-size: 24px; color: var(--text-primary); margin-bottom: 20px;">
+                        <i class="fa-solid fa-circle-question" style="color: var(--primary-color);"></i> Frequently
+                        Asked Questions
+                    </h2>
+
+                    <div class="faq-item active">
+                        <div class="faq-header">
+                            <span>How accurate is the AI Crop Doctor leaf analysis?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-content">
+                            Our AI model is trained on over 150,000 verified agricultural image samples, providing over
+                            98% diagnostic accuracy for major cereal, pulse, fruit, and cash crops.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-header">
+                            <span>Are Mandi commodity prices updated daily?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-content">
+                            Yes, market prices are refreshed daily at 11:30 AM based on official government Agmarknet
+                            feed APIs and regional Mandi board market arrivals.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-header">
+                            <span>Is the GROW platform free for farmers?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-content">
+                            Yes! All core tools—including the Yield Calculator, Weather Advisory, Crop Doctor AI, and
+                            Learning Articles—are 100% free of cost to empower farming communities.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-header">
+                            <span>Can I use GROW on my mobile smartphone without installing an app?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-content">
+                            Absolutely. The GROW website is fully responsive and optimized for mobile browser screens,
+                            working fast even on 3G and 4G rural mobile networks.
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <h3>#GROW</h3>
+        <p>LET YOUR KNOWLEDGE YIELD A BETTER FUTURE</p>
+        <p>© 2026 GROW. All Rights Reserved.</p>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        function submitContactForm() {
+            const name = document.getElementById('c-name').value;
+            if (typeof showToast === 'function') {
+                showToast(`Thank you, ${name}! Your query has been assigned ticket #GR-${Math.floor(1000 + Math.random() * 9000)}. Our expert will call you shortly.`, 'fa-circle-check');
+            }
+            document.getElementById('contact-form').reset();
+        }
+    </script>
+</body>
+
+</html>

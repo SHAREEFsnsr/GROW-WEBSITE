@@ -58,17 +58,66 @@
         /* ---- Advisory Card dynamic ---- */
         .advisory-safe {
             background: #E8F5E9;
-            border-left-color: #2E7D32;
+            border-left: 5px solid #2E7D32;
         }
 
         .advisory-warn {
             background: #FFF8E1;
-            border-left-color: #F9A825;
+            border-left: 5px solid #F9A825;
         }
 
         .advisory-alert {
             background: #FFF3F3;
-            border-left-color: #D32F2F;
+            border-left: 5px solid #D32F2F;
+        }
+
+        /* ---- Dark Mode Weather Advisory Overrides ---- */
+        body.dark-theme .advisory-safe {
+            background: #152A1C !important;
+            border-left-color: #4CAF50 !important;
+            color: #E2EAE4 !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+        }
+        body.dark-theme .advisory-safe #advisory-title,
+        body.dark-theme .advisory-safe h3 {
+            color: #81C784 !important;
+        }
+        body.dark-theme .advisory-safe #advisory-icon {
+            color: #4CAF50 !important;
+        }
+
+        body.dark-theme .advisory-warn {
+            background: #2C2612 !important;
+            border-left-color: #FFC107 !important;
+            color: #F5EBE0 !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+        }
+        body.dark-theme .advisory-warn #advisory-title,
+        body.dark-theme .advisory-warn h3 {
+            color: #FFD54F !important;
+        }
+        body.dark-theme .advisory-warn #advisory-icon {
+            color: #FFC107 !important;
+        }
+
+        body.dark-theme .advisory-alert {
+            background: #2C1819 !important;
+            border-left-color: #FF5252 !important;
+            color: #F8E5E5 !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+        }
+        body.dark-theme .advisory-alert #advisory-title,
+        body.dark-theme .advisory-alert h3 {
+            color: #FF8A80 !important;
+        }
+        body.dark-theme .advisory-alert #advisory-icon {
+            color: #FF5252 !important;
+        }
+
+        body.dark-theme .advisory-safe #advisory-text,
+        body.dark-theme .advisory-warn #advisory-text,
+        body.dark-theme .advisory-alert #advisory-text {
+            color: #D2E3D6 !important;
         }
 
         /* ---- Popular city chips ---- */
@@ -398,35 +447,61 @@
         }
 
         function farmingAdvisory(current, daily) {
-            const wind = current.windspeed;
-            const rain = daily.precipitation_probability_max[0];
-            const precip = daily.precipitation_sum[0];
-            const code = current.weathercode;
+            const wind = current.windspeed || 0;
+            const rainProb = (daily.precipitation_probability_max && daily.precipitation_probability_max[0]) || 0;
+            const precipSum = (daily.precipitation_sum && daily.precipitation_sum[0]) || 0;
+            const code = current.weathercode || 0;
+            const tempMax = (daily.temperature_2m_max && daily.temperature_2m_max[0]) || current.temperature || 30;
 
-            let type = "safe", title = "✅ Good Farming Day", text = "";
+            let type = "safe", title = "✅ Optimal Farming Day — Dry & Clear", text = "";
 
-            if (rain > 70 || code >= 80) {
+            // 1. Heavy Rain / Severe Thunderstorm Alert (Triggers ONLY when real heavy rain is expected)
+            if (code >= 95 || (precipSum >= 5.0 && rainProb >= 65) || (code >= 63 && precipSum >= 3.0)) {
                 type = "alert";
-                title = "🚨 Rain Alert — Avoid Field Operations";
-                text = `<strong>Spray Advisory:</strong> Do NOT spray pesticides or fertilizers today. High rain probability (${rain}%) will wash away chemicals and waste resources.<br>
-                     <strong>Irrigation:</strong> Skip irrigation — natural rainfall expected (${precip} mm). Check drainage channels to prevent waterlogging.<br>
-                     <strong>Harvesting:</strong> Delay harvesting. Wet conditions increase crop damage and fungal risk.`;
-            } else if (rain > 40) {
+                title = `🚨 Heavy Rain Alert — Expected ${precipSum} mm Rain (${rainProb}%)`;
+                text = `<strong>Spray Advisory:</strong> Do NOT spray pesticides or fertilizers today. Significant rainfall (${precipSum} mm, ${rainProb}% probability) will wash away chemicals and waste money.<br>
+                     <strong>Irrigation:</strong> Turn off irrigation pumps. Natural rainfall exceeds crop water requirement. Ensure field drainage channels are clear to prevent waterlogging.<br>
+                     <strong>Harvesting:</strong> Stop harvesting immediately and move harvested produce to covered storage sheds.`;
+            } 
+            // 2. Light to Moderate Rain Warning
+            else if ((precipSum >= 1.5 && rainProb >= 50) || (code >= 61 && rainProb >= 50) || (code >= 80 && precipSum >= 2.0)) {
                 type = "warn";
-                title = "⚠️ Moderate Rain Risk — Proceed with Caution";
-                text = `<strong>Spray Advisory:</strong> Marginal conditions. Complete all spraying before 10:00 AM if necessary. Rain probability is ${rain}%.<br>
-                     <strong>Irrigation:</strong> Reduce irrigation quantity by 50%. Monitor soil moisture closely.<br>
-                     <strong>Harvesting:</strong> Early morning harvesting possible. Avoid afternoon field work.`;
-            } else if (wind > 20) {
+                title = `🌧️ Light Rain Expected — ${precipSum} mm (${rainProb}% chance)`;
+                text = `<strong>Spray Advisory:</strong> Exercise caution. Rain chance is ${rainProb}% with expected rainfall of ${precipSum} mm. Finish spraying early before rain starts.<br>
+                     <strong>Irrigation:</strong> Pause routine irrigation today and re-check soil moisture in the evening.<br>
+                     <strong>Harvesting:</strong> Harvest mature crops early in the morning and cover with tarpaulins.`;
+            }
+            // 3. High Wind Warning (Clear skies but high wind)
+            else if (wind >= 22) {
                 type = "warn";
-                title = "⚠️ High Wind — Avoid Spraying";
-                text = `<strong>Spray Advisory:</strong> Wind speed (${wind.toFixed(1)} km/h) is too high for effective spraying. Chemical drift may harm neighbouring crops.<br>
-                     <strong>Irrigation:</strong> Drip or furrow irrigation recommended over overhead sprinklers in high wind.<br>
-                     <strong>Harvesting:</strong> Light harvesting possible. Secure any covered crops or nets.`;
-            } else {
-                text = `<strong>Spray Advisory:</strong> Excellent conditions for foliar spray. Wind is calm (${wind.toFixed(1)} km/h) and rain probability is low (${rain}%). Spray until 4:00 PM for best results.<br>
-                     <strong>Irrigation:</strong> Irrigate as per crop schedule. Soil conditions are normal.<br>
-                     <strong>Harvesting:</strong> Ideal day for harvesting. Clear skies and low humidity reduce post-harvest spoilage.`;
+                title = `💨 High Wind Warning (${wind.toFixed(1)} km/h) — Avoid Spraying`;
+                text = `<strong>Spray Advisory:</strong> High wind speed (${wind.toFixed(1)} km/h) causes severe chemical spray drift. Avoid spraying to protect nearby crops and workers.<br>
+                     <strong>Irrigation:</strong> Prefer drip irrigation over sprinklers to avoid water dispersion.<br>
+                     <strong>Harvesting:</strong> Secure loose crop stems, anti-hail nets, and temporary greenhouse sheets.`;
+            }
+            // 4. Extreme Heatwave Warning
+            else if (tempMax >= 42) {
+                type = "warn";
+                title = `☀️ Extreme Heatwave Alert (${tempMax.toFixed(1)}°C)`;
+                text = `<strong>Spray Advisory:</strong> High temperatures reduce spray chemical efficiency due to rapid evaporation. Spray only in late evening hours after 5:30 PM.<br>
+                     <strong>Irrigation:</strong> Apply light evening irrigation to reduce soil heat stress and root scorching.<br>
+                     <strong>Harvesting:</strong> Conduct harvesting during early morning hours (6:00 AM – 9:30 AM).`;
+            }
+            // 5. Light Drizzle / Trace Moisture (Safe for operations)
+            else if (precipSum > 0 && precipSum < 1.5) {
+                type = "safe";
+                title = `🌤️ Fair Weather with Trace Drizzle (${precipSum} mm)`;
+                text = `<strong>Spray Advisory:</strong> Good conditions overall. Only light trace drizzle possible (${rainProb}% chance, ${precipSum} mm). Foliar spraying is safe.<br>
+                     <strong>Irrigation:</strong> Maintain normal scheduled irrigation.<br>
+                     <strong>Harvesting:</strong> Safe for routine field harvesting and crop drying.`;
+            }
+            // 6. Optimal Clear Farming Day
+            else {
+                type = "safe";
+                title = "☀️ Optimal Farming Day — Clear & Dry";
+                text = `<strong>Spray Advisory:</strong> Ideal day for pesticide, fungicide, and liquid fertilizer application! Calm wind (${wind.toFixed(1)} km/h) and low rain risk (${rainProb}%).<br>
+                     <strong>Irrigation:</strong> Irrigate crops as per normal water requirement.<br>
+                     <strong>Harvesting:</strong> Perfect day for harvesting, threshing, and solar grain drying with low humidity and clear sunshine.`;
             }
 
             const card = document.getElementById('advisory-card');

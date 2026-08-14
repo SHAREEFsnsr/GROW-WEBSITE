@@ -1265,8 +1265,57 @@ footer p {
 }
 
 @media (max-width: 768px) {
+    /* Mobile Header Layout & Logo Scaling */
+    .navbar {
+        padding: 8px 16px !important;
+        min-height: 60px !important;
+    }
+
+    .logo img {
+        height: 44px !important;
+        max-height: 44px !important;
+        width: auto !important;
+    }
+
+    .nav-actions-wrapper {
+        gap: 6px !important;
+        align-items: center !important;
+    }
+
+    .lang-switcher-btn {
+        padding: 4px 10px !important;
+        height: 36px !important;
+        font-size: 0.8rem !important;
+        gap: 4px !important;
+        border-radius: 30px !important;
+    }
+
+    .lang-switcher-btn .lang-current-name {
+        display: none !important;
+    }
+
+    .theme-toggle-btn {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 0.95rem !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 50% !important;
+        flex-shrink: 0 !important;
+    }
+
     .mobile-menu-btn {
-        display: flex;
+        display: flex !important;
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 1.15rem !important;
+        padding: 0 !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 10px !important;
+        flex-shrink: 0 !important;
     }
 
     /* Mobile Backdrop Overlay */
@@ -4419,4 +4468,123 @@ body.dark-theme .search-chip {
 body.dark-theme .search-chip:hover {
     background: #4CAF50 !important;
     color: #0E1410 !important;
+}
+
+/* ==========================================
+   BRANCH HEADQUARTERS & GOOGLE MAPS CARD STYLES
+========================================== */
+.branch-hq-card {
+    padding: 0 !important;
+    overflow: hidden;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    background: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.branch-info-col {
+    padding: 40px;
+}
+
+.branch-icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(46, 125, 50, 0.12);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.branch-map-container {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    border-left: 1px solid var(--border-color);
+    overflow: hidden;
+    position: relative;
+}
+
+.branch-map-container iframe {
+    border: 0;
+    min-height: 420px;
+    width: 100%;
+    height: 100%;
+    display: block;
+    transition: filter 0.3s ease;
+}
+
+/* DARK MODE OVERRIDES FOR BRANCH HQ & GOOGLE MAPS */
+body.dark-theme .branch-hq-card {
+    background: #162019 !important;
+    border-color: #263529 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-theme .branch-map-container {
+    border-left-color: #263529 !important;
+}
+
+body.dark-theme .branch-map-container iframe {
+    filter: invert(90%) hue-rotate(180deg) contrast(95%) brightness(95%) !important;
+}
+
+body.dark-theme .branch-icon-circle {
+    background: rgba(76, 175, 80, 0.2) !important;
+    color: #81C784 !important;
+}
+
+/* ==========================================
+   WEATHER ADVISORY CARDS IN DARK MODE
+========================================== */
+body.dark-theme .advisory-safe {
+    background: #152A1C !important;
+    border-left: 5px solid #4CAF50 !important;
+    color: #E2EAE4 !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+body.dark-theme .advisory-safe #advisory-title,
+body.dark-theme .advisory-safe h3 {
+    color: #81C784 !important;
+}
+body.dark-theme .advisory-safe #advisory-icon {
+    color: #4CAF50 !important;
+}
+
+body.dark-theme .advisory-warn {
+    background: #2C2612 !important;
+    border-left: 5px solid #FFC107 !important;
+    color: #F5EBE0 !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+body.dark-theme .advisory-warn #advisory-title,
+body.dark-theme .advisory-warn h3 {
+    color: #FFD54F !important;
+}
+body.dark-theme .advisory-warn #advisory-icon {
+    color: #FFC107 !important;
+}
+
+body.dark-theme .advisory-alert {
+    background: #2C1819 !important;
+    border-left: 5px solid #FF5252 !important;
+    color: #F8E5E5 !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+body.dark-theme .advisory-alert #advisory-title,
+body.dark-theme .advisory-alert h3 {
+    color: #FF8A80 !important;
+}
+body.dark-theme .advisory-alert #advisory-icon {
+    color: #FF5252 !important;
+}
+
+body.dark-theme .advisory-safe #advisory-text,
+body.dark-theme .advisory-warn #advisory-text,
+body.dark-theme .advisory-alert #advisory-text {
+    color: #D2E3D6 !important;
 }

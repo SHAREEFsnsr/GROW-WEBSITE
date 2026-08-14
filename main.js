@@ -777,7 +777,13 @@ const GROW_SITE_INDEX = [
 ];
 
 function initGlobalSearchEngine() {
-    const searchBoxes = document.querySelectorAll('.search-box, .market-search-bar, .weather-search-bar');
+    // Only initialize global site navigation search popup on the Home / Index page
+    const pagePath = window.location.pathname.toLowerCase();
+    const isHomePage = pagePath.endsWith('index.html') || pagePath === '/' || pagePath.endsWith('/') || (!pagePath.includes('.html') && document.querySelector('.hero'));
+    
+    if (!isHomePage) return;
+
+    const searchBoxes = document.querySelectorAll('.search-box');
     
     searchBoxes.forEach(box => {
         const input = box.querySelector('input');

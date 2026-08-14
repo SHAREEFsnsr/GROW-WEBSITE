@@ -178,14 +178,17 @@
             <div class="weather-dashboard">
 
                 <!-- Search Bar -->
-                <div class="market-search-bar" style="align-items: center; margin-bottom: 16px;">
-                    <i class="fa-solid fa-location-dot" style="font-size: 24px; color: var(--primary-color);"></i>
+                <div class="weather-search-bar">
+                    <div class="search-box-icon">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
                     <input type="text" id="weather-city-input" class="form-control"
-                        placeholder="Enter city or district name (e.g. Mumbai, Nashik, Ludhiana)..." value="">
-                    <button class="primary-btn" id="weather-search-btn" onclick="searchWeather()">
-                        <i class="fa-solid fa-magnifying-glass"></i> Search
+                        placeholder="Enter city or district..." value="">
+                    <button id="weather-search-btn" onclick="searchWeather()">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>Search</span>
                     </button>
-                    <button class="secondary-btn" onclick="getMyLocation()" title="Use my GPS location">
+                    <button class="secondary-btn" onclick="getMyLocation()" title="Use my GPS location" style="height:48px; width:48px; border-radius:50px; padding:0; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
                         <i class="fa-solid fa-crosshairs"></i>
                     </button>
                 </div>
@@ -338,7 +341,7 @@
         </section>
     </main>
 
-    <footer>
+    <footer class="notranslate" translate="no">
         <h3>#GROW</h3>
         <p>LET YOUR KNOWLEDGE YIELD A BETTER FUTURE</p>
         <p>© 2026 GROW. All Rights Reserved.</p>

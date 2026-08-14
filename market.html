@@ -134,13 +134,16 @@
 
             <!-- Search & Filters Bar -->
             <div class="market-search-bar">
-                <i class="fa-solid fa-wheat-awn" style="font-size: 24px; color: var(--primary-color);"></i>
+                <div class="search-box-icon">
+                    <i class="fa-solid fa-wheat-awn"></i>
+                </div>
                 <input type="text" id="market-search-input" class="form-control"
-                    placeholder="Search crop (e.g. Wheat, Mustard, Soybean, Cotton, Tomato)..."
+                    placeholder="Search mandi crop prices (e.g. Wheat, Mustard, Soybean)..."
                     onkeypress="handleKeyPress(event)"
                     oninput="handleSearchInput()">
-                <button class="primary-btn" id="search-btn" onclick="executeCropSearch()">
-                    <i class="fa-solid fa-magnifying-glass"></i> Search Analysis
+                <button id="search-btn" onclick="executeCropSearch()">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>Search</span>
                 </button>
             </div>
 
@@ -188,7 +191,7 @@
     </main>
 
     <!-- Footer -->
-    <footer>
+    <footer class="notranslate" translate="no">
         <h3>#GROW</h3>
         <p>LET YOUR KNOWLEDGE YIELD A BETTER FUTURE</p>
         <p>© 2026 GROW. All Rights Reserved.</p>

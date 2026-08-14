@@ -47,6 +47,17 @@
                 <span class="badge"><i class="fa-solid fa-graduation-cap"></i> Farmer Education & Government Schemes</span>
                 <h1>Smart Farming Learning & Govt Schemes Hub</h1>
                 <p>Master modern agricultural practices, bio-fertilizer preparation, drone technology, government subsidies, and access official government portals.</p>
+
+                <div class="search-box" style="max-width: 600px; margin: 24px auto 0;">
+                    <div class="search-box-icon">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <input type="text" id="learning-search-input" placeholder="Search guides, PM-Kisan, organic farming, drones, subsidies...">
+                    <button aria-label="Search" onclick="scrollToLearningSearch()">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>Search</span>
+                    </button>
+                </div>
             </div>
         </section>
 
@@ -177,7 +188,7 @@
     </div>
 
     <!-- Footer -->
-    <footer>
+    <footer class="notranslate" translate="no">
         <h3>#GROW</h3>
         <p>LET YOUR KNOWLEDGE YIELD A BETTER FUTURE</p>
         <p>© 2026 GROW. All Rights Reserved.</p>
@@ -347,8 +358,44 @@
             openModal('article-modal');
         }
 
+        function scrollToLearningSearch() {
+            const searchInput = document.getElementById('learning-search-input');
+            if (searchInput) {
+                searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => searchInput.focus(), 300);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             renderArticles(articles);
+
+            const input = document.getElementById('learning-search-input');
+            if (input) {
+                input.addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase().trim();
+                    if (!term) {
+                        renderArticles(articles);
+                        return;
+                    }
+                    const filtered = articles.filter(a => 
+                        a.title.toLowerCase().includes(term) ||
+                        a.desc.toLowerCase().includes(term) ||
+                        a.full.toLowerCase().includes(term) ||
+                        a.cat.toLowerCase().includes(term)
+                    );
+                    renderArticles(filtered);
+                });
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('search') || window.location.hash === '#search') {
+                const query = urlParams.get('search');
+                if (query && input) {
+                    input.value = query;
+                    input.dispatchEvent(new Event('input'));
+                }
+                setTimeout(scrollToLearningSearch, 300);
+            }
         });
     </script>
 </body>

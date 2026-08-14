@@ -3,8 +3,10 @@
 ========================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 0. Initialize Dark/Light Theme System
+    // 0. Initialize Dark/Light Theme System & Multi-Language Switcher
     initThemeSwitcher();
+    initLanguageSwitcher();
+    initGlobalSearchEngine();
 
     // 1. Highlight Current Active Page Link in Navigation
     const currentPath = window.location.pathname.split('/').pop() || 'index.html';
@@ -89,28 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Search Box Interactivity (Home & Header)
-    const searchInputs = document.querySelectorAll('.search-box input');
-    searchInputs.forEach(input => {
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const query = input.value.trim();
-                if (query) {
-                    window.location.href = `crops.html?search=${encodeURIComponent(query)}`;
-                }
-            }
-        });
-    });
+    // 3. Global Intelligent Search Engine Initialization
+    // Handled by initGlobalSearchEngine() below
 
-    const searchBtns = document.querySelectorAll('.search-box button');
-    searchBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const input = btn.previousElementSibling;
-            if (input && input.value.trim()) {
-                window.location.href = `crops.html?search=${encodeURIComponent(input.value.trim())}`;
-            }
-        });
-    });
 
     // 4. Modal Triggers & Close
     const closeModalBtns = document.querySelectorAll('.modal-close, [data-close-modal]');
@@ -438,4 +421,530 @@ function initThemeSwitcher() {
             });
         }
     }
+}
+
+/* ==========================================
+   GROW MULTI-LANGUAGE TRANSLATION SYSTEM
+========================================== */
+const GROW_LANGUAGES = [
+    // Regional Indian Languages
+    { code: 'en', name: 'English', native: 'English', badge: 'EN', category: 'Regional / Primary' },
+    { code: 'hi', name: 'Hindi', native: 'हिन्दी', badge: 'HI', category: 'Regional / Primary' },
+    { code: 'pa', name: 'Punjabi', native: 'ਪੰਜਾਬੀ', badge: 'PA', category: 'Regional / Primary' },
+    { code: 'mr', name: 'Marathi', native: 'मराठी', badge: 'MR', category: 'Regional / Primary' },
+    { code: 'te', name: 'Telugu', native: 'తెలుగు', badge: 'TE', category: 'Regional / Primary' },
+    { code: 'ta', name: 'Tamil', native: 'தமிழ்', badge: 'TA', category: 'Regional / Primary' },
+    { code: 'gu', name: 'Gujarati', native: 'ગુજરાતી', badge: 'GU', category: 'Regional / Primary' },
+    { code: 'bn', name: 'Bengali', native: 'বাংলা', badge: 'BN', category: 'Regional / Primary' },
+    { code: 'kn', name: 'Kannada', native: 'ਕੱਨੜ', badge: 'KN', category: 'Regional / Primary' },
+    { code: 'ml', name: 'Malayalam', native: 'മലയാളം', badge: 'ML', category: 'Regional / Primary' },
+    { code: 'ur', name: 'Urdu', native: 'اردو', badge: 'UR', category: 'Regional / Primary' },
+    // Global Languages
+    { code: 'es', name: 'Spanish', native: 'Español', badge: 'ES', category: 'Global' },
+    { code: 'fr', name: 'French', native: 'Français', badge: 'FR', category: 'Global' },
+    { code: 'de', name: 'German', native: 'Deutsch', badge: 'DE', category: 'Global' },
+    { code: 'zh-CN', name: 'Chinese', native: '中文', badge: 'ZH', category: 'Global' },
+    { code: 'ar', name: 'Arabic', native: 'العربية', badge: 'AR', category: 'Global' }
+];
+
+function initLanguageSwitcher() {
+    // 1. Create hidden google translate element container if not present
+    if (!document.getElementById('google_translate_element')) {
+        const translateContainer = document.createElement('div');
+        translateContainer.id = 'google_translate_element';
+        translateContainer.style.display = 'none';
+        document.body.appendChild(translateContainer);
+    }
+
+    // 2. Load Google Translate script dynamically if not present
+    if (!window.googleTranslateElementInit) {
+        window.googleTranslateElementInit = function() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: GROW_LANGUAGES.map(l => l.code).join(','),
+                autoDisplay: false
+            }, 'google_translate_element');
+        };
+
+        if (!document.getElementById('google-translate-script')) {
+            const script = document.createElement('script');
+            script.id = 'google-translate-script';
+            script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            script.async = true;
+            document.head.appendChild(script);
+        }
+    }
+
+    // 3. Current active language
+    let currentLangCode = localStorage.getItem('grow_selected_lang') || 'en';
+    const currentLangObj = GROW_LANGUAGES.find(l => l.code === currentLangCode) || GROW_LANGUAGES[0];
+
+    // 4. Inject language switcher widget into Desktop Navbar
+    const navbar = document.querySelector('.navbar');
+    let actionsWrapper = navbar ? navbar.querySelector('.nav-actions-wrapper') : null;
+
+    if (navbar && !actionsWrapper) {
+        const mobileBtn = navbar.querySelector('.mobile-menu-btn');
+        actionsWrapper = document.createElement('div');
+        actionsWrapper.className = 'nav-actions-wrapper';
+        actionsWrapper.style.display = 'flex';
+        actionsWrapper.style.alignItems = 'center';
+        actionsWrapper.style.gap = '10px';
+        if (mobileBtn) {
+            navbar.insertBefore(actionsWrapper, mobileBtn);
+            actionsWrapper.appendChild(mobileBtn);
+        } else {
+            navbar.appendChild(actionsWrapper);
+        }
+    }
+
+    if (actionsWrapper && !document.getElementById('lang-switcher-container')) {
+        const langContainer = document.createElement('div');
+        langContainer.id = 'lang-switcher-container';
+        langContainer.className = 'lang-switcher-container';
+
+        const regionalLangs = GROW_LANGUAGES.filter(l => l.category.includes('Regional'));
+        const globalLangs = GROW_LANGUAGES.filter(l => l.category === 'Global');
+
+        const renderLangOption = (lang) => `
+            <div class="lang-option ${lang.code === currentLangCode ? 'selected' : ''}" data-lang="${lang.code}">
+                <div class="lang-option-left">
+                    <span class="lang-code-badge">${lang.badge}</span>
+                    <span class="lang-name-native">${lang.native}</span>
+                    <span class="lang-name-en">(${lang.name})</span>
+                </div>
+                <i class="fa-solid fa-check lang-check"></i>
+            </div>
+        `;
+
+        langContainer.innerHTML = `
+            <button class="lang-switcher-btn" id="lang-switcher-btn" aria-label="Select Language">
+                <i class="fa-solid fa-globe lang-icon"></i>
+                <span class="lang-code-badge">${currentLangObj.badge}</span>
+                <span class="lang-current-name">${currentLangObj.native}</span>
+                <i class="fa-solid fa-chevron-down lang-arrow"></i>
+            </button>
+
+            <div class="lang-dropdown-menu" id="lang-dropdown-menu">
+                <div class="lang-dropdown-header">
+                    <span><i class="fa-solid fa-globe"></i> Select Language</span>
+                    <span style="font-size:0.75rem; text-transform:none; color:var(--text-muted);">Regional & Global</span>
+                </div>
+                <div class="lang-search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" class="lang-search-input" id="lang-search-input" placeholder="Search language...">
+                </div>
+                <div class="lang-list" id="lang-list">
+                    <div class="lang-category-title">Regional Languages (India)</div>
+                    ${regionalLangs.map(renderLangOption).join('')}
+                    <div class="lang-category-title">Global Languages</div>
+                    ${globalLangs.map(renderLangOption).join('')}
+                </div>
+            </div>
+        `;
+
+        // Insert before theme-toggle-btn or mobileBtn
+        const themeBtn = document.getElementById('theme-toggle-btn');
+        const mobileBtn = actionsWrapper.querySelector('.mobile-menu-btn');
+        if (themeBtn) {
+            actionsWrapper.insertBefore(langContainer, themeBtn);
+        } else if (mobileBtn) {
+            actionsWrapper.insertBefore(langContainer, mobileBtn);
+        } else {
+            actionsWrapper.appendChild(langContainer);
+        }
+
+        // Toggle dropdown open/close
+        const switcherBtn = langContainer.querySelector('#lang-switcher-btn');
+        const searchInput = langContainer.querySelector('#lang-search-input');
+
+        switcherBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = langContainer.classList.toggle('open');
+            if (isOpen && searchInput) {
+                setTimeout(() => searchInput.focus(), 100);
+            }
+        });
+
+        // Close on outside click
+        document.addEventListener('click', (e) => {
+            if (!langContainer.contains(e.target)) {
+                langContainer.classList.remove('open');
+            }
+        });
+
+        // Search filter inside dropdown
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase().trim();
+                const options = langContainer.querySelectorAll('.lang-option');
+                options.forEach(opt => {
+                    const langCode = opt.getAttribute('data-lang');
+                    const langObj = GROW_LANGUAGES.find(l => l.code === langCode);
+                    if (langObj) {
+                        const match = langObj.name.toLowerCase().includes(term) || 
+                                      langObj.native.toLowerCase().includes(term) ||
+                                      langObj.badge.toLowerCase().includes(term) ||
+                                      langObj.code.toLowerCase().includes(term);
+                        opt.style.display = match ? 'flex' : 'none';
+                    }
+                });
+            });
+        }
+
+        // Language selection handler
+        const options = langContainer.querySelectorAll('.lang-option');
+        options.forEach(opt => {
+            opt.addEventListener('click', () => {
+                const langCode = opt.getAttribute('data-lang');
+                changeLanguage(langCode);
+                langContainer.classList.remove('open');
+            });
+        });
+    }
+
+    // 5. Inject Language chips in Mobile Drawer Navigation if present
+    const navMenu = document.querySelector('.nav-links');
+    if (navMenu && !navMenu.querySelector('.mobile-lang-section')) {
+        const mobileLangSec = document.createElement('li');
+        mobileLangSec.className = 'mobile-lang-section';
+        
+        const topIndianLangs = ['en', 'hi', 'pa', 'mr', 'te', 'ta', 'gu', 'bn'];
+        const chipsHTML = topIndianLangs.map(code => {
+            const lang = GROW_LANGUAGES.find(l => l.code === code);
+            if (!lang) return '';
+            return `
+                <div class="mobile-lang-chip ${code === currentLangCode ? 'selected' : ''}" data-lang="${code}">
+                    <span class="lang-code-badge">${lang.badge}</span> <span>${lang.native}</span>
+                </div>
+            `;
+        }).join('');
+
+        mobileLangSec.innerHTML = `
+            <div class="mobile-lang-title">
+                <i class="fa-solid fa-globe"></i> Select Language
+            </div>
+            <div class="mobile-lang-grid">
+                ${chipsHTML}
+            </div>
+        `;
+
+        navMenu.appendChild(mobileLangSec);
+
+        const chips = mobileLangSec.querySelectorAll('.mobile-lang-chip');
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                const langCode = chip.getAttribute('data-lang');
+                changeLanguage(langCode);
+            });
+        });
+    }
+
+    // 6. Suppress Google Top Banner Bar Continuously
+    startGoogleTopBarSuppression();
+}
+
+// Function to suppress Google Translate Top Banner and body top displacement
+function startGoogleTopBarSuppression() {
+    function cleanGoogleElements() {
+        document.body.style.top = '0px';
+        document.body.style.position = 'static';
+        document.body.style.marginTop = '0px';
+
+        // Protect footers from being translated across all pages
+        document.querySelectorAll('footer').forEach(footer => {
+            if (!footer.classList.contains('notranslate')) {
+                footer.classList.add('notranslate');
+            }
+            if (footer.getAttribute('translate') !== 'no') {
+                footer.setAttribute('translate', 'no');
+            }
+        });
+
+        const googleBannerIframes = document.querySelectorAll('iframe.skiptranslate, iframe.goog-te-banner-frame, .goog-te-banner-frame, .VIpgJd-Z44Wfd-O22pSp, .VIpgJd-Z44Wfd-a91sl-OJu2lb');
+        googleBannerIframes.forEach(iframe => {
+            iframe.style.display = 'none';
+            iframe.style.visibility = 'hidden';
+            iframe.style.opacity = '0';
+            iframe.style.height = '0px';
+            iframe.style.width = '0px';
+            iframe.style.pointerEvents = 'none';
+        });
+    }
+
+    cleanGoogleElements();
+    setInterval(cleanGoogleElements, 250);
+}
+
+// Global function to trigger Google Translate switch
+function changeLanguage(langCode) {
+    const prevLang = localStorage.getItem('grow_selected_lang') || 'en';
+    localStorage.setItem('grow_selected_lang', langCode);
+
+    const langObj = GROW_LANGUAGES.find(l => l.code === langCode) || GROW_LANGUAGES[0];
+
+    // Set google translate cookie (googtrans=/en/{code}) across domain root
+    const hostname = window.location.hostname;
+    document.cookie = `googtrans=/en/${langCode}; path=/; domain=${hostname}`;
+    document.cookie = `googtrans=/en/${langCode}; path=/`;
+
+    // Dispatch change event to Google translate hidden select if rendered
+    const googleSelect = document.querySelector('.goog-te-combo');
+    if (googleSelect) {
+        googleSelect.value = langCode;
+        googleSelect.dispatchEvent(new Event('change'));
+    }
+
+    // Toast notification
+    showToast(`Language set to ${langObj.native} (${langObj.name})`, 'fa-globe');
+
+    // Reload page if cookie set needs fresh render
+    if (prevLang !== langCode) {
+        setTimeout(() => {
+            window.location.reload();
+        }, 400);
+    }
+}
+
+/* ==========================================
+   GROW GLOBAL INTELLIGENT SEARCH ENGINE
+========================================== */
+const GROW_SITE_INDEX = [
+    {
+        title: "Yield Calculator & Profit Estimator",
+        url: "yield-calculator.html",
+        icon: "fa-calculator",
+        category: "Tool / Calculator",
+        description: "Calculate expected crop output, input costs, gross income, and net profit before sowing.",
+        keywords: ["yield", "calculator", "profit", "yield calculator", "cost", "income", "acres", "quintal", "harvest", "budget", "expenses", "estimation", "crop output"]
+    },
+    {
+        title: "Weather Forecast & Climate Alerts",
+        url: "weather.html",
+        icon: "fa-cloud-sun-rain",
+        category: "Weather Service",
+        description: "Real-time weather updates, rainfall predictions, temperature, wind speed, and spray conditions.",
+        keywords: ["weather", "forecast", "rain", "rainfall", "temperature", "humidity", "climate", "wind", "monsoon", "weather alerts", "spray conditions", "cloud", "sun"]
+    },
+    {
+        title: "Crop Doctor & AI Disease Detection",
+        url: "crop-doctor.html",
+        icon: "fa-user-doctor",
+        category: "AI Diagnosis",
+        description: "Upload or capture crop images for instant AI disease identification, remedies, and treatment.",
+        keywords: ["crop doctor", "disease", "pest", "leaf", "fungus", "infection", "remedy", "fertilizer", "treatment", "doctor", "diagnosis", "plant health", "yellowing", "blight", "rust", "camera", "ai"]
+    },
+    {
+        title: "Market Mandi Prices & Trends",
+        url: "market.html",
+        icon: "fa-chart-line",
+        category: "Market Prices",
+        description: "Live APMC mandi rates, daily price trends, market demand, and selling insights for all major crops.",
+        keywords: ["market", "mandi", "prices", "rate", "mandi bhav", "crop price", "wheat price", "rice price", "cotton price", "trend", "apmc", "trading", "sell", "rates", "bhav"]
+    },
+    {
+        title: "Learning Hub & Government Schemes",
+        url: "learning.html",
+        icon: "fa-graduation-cap",
+        category: "Education & Schemes",
+        description: "Agricultural guides, modern farming techniques, organic methods, and government schemes like PM-Kisan.",
+        keywords: ["learning", "courses", "articles", "guides", "education", "farming techniques", "organic farming", "schemes", "pm kisan", "government schemes", "soil health", "drip irrigation", "subsidy", "learn"]
+    },
+    {
+        title: "Contact & Farmer Assistance Helpline",
+        url: "contact.html",
+        icon: "fa-headset",
+        category: "Help & Support",
+        description: "Get in touch with agriculture experts, ask questions, or access the GROW Kisan Mitra helpline.",
+        keywords: ["contact", "help", "support", "phone", "email", "address", "kisan helpline", "community", "expert assistance", "faq", "customer care", "ask", "location"]
+    },
+    {
+        title: "About GROW Platform",
+        url: "about.html",
+        icon: "fa-seedling",
+        category: "About Us",
+        description: "Learn about GROW's mission, vision, smart farming operations, and agricultural technology.",
+        keywords: ["about", "about us", "mission", "vision", "team", "grow platform", "company", "story", "platform"]
+    },
+    {
+        title: "Home & Managed Active Farms",
+        url: "index.html",
+        icon: "fa-house",
+        category: "Home Page",
+        description: "Explore active managed farms, IoT automation, organic crop rotations, and general GROW overview.",
+        keywords: ["home", "grow", "farms", "managed farms", "wheat farm", "cotton farm", "iot sensors", "active management", "overview", "index"]
+    }
+];
+
+function initGlobalSearchEngine() {
+    const searchBoxes = document.querySelectorAll('.search-box, .market-search-bar, .weather-search-bar');
+    
+    searchBoxes.forEach(box => {
+        const input = box.querySelector('input');
+        const button = box.querySelector('button');
+        if (!input) return;
+
+        // Create autocomplete dropdown overlay if not present
+        let overlay = box.querySelector('.search-autocomplete-overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.className = 'search-autocomplete-overlay';
+            box.appendChild(overlay);
+        }
+
+        let selectedIndex = -1;
+
+        // Perform search query matching
+        function performSearch(query) {
+            const cleanQuery = query.toLowerCase().trim();
+            if (!cleanQuery) {
+                overlay.classList.remove('active');
+                overlay.innerHTML = '';
+                return;
+            }
+
+            // Filter site index
+            const matches = GROW_SITE_INDEX.filter(item => {
+                const inTitle = item.title.toLowerCase().includes(cleanQuery);
+                const inDesc = item.description.toLowerCase().includes(cleanQuery);
+                const inCat = item.category.toLowerCase().includes(cleanQuery);
+                const inKeywords = item.keywords.some(k => k.toLowerCase().includes(cleanQuery));
+                return inTitle || inDesc || inCat || inKeywords;
+            });
+
+            if (matches.length > 0) {
+                // Render matched search results
+                overlay.innerHTML = matches.map(item => `
+                    <a href="${item.url}" class="search-result-item" data-url="${item.url}">
+                        <div class="search-result-icon">
+                            <i class="fa-solid ${item.icon}"></i>
+                        </div>
+                        <div class="search-result-content">
+                            <div class="search-result-header">
+                                <span class="search-result-title">${item.title}</span>
+                                <span class="search-result-badge">${item.category}</span>
+                            </div>
+                            <div class="search-result-desc">${item.description}</div>
+                        </div>
+                    </a>
+                `).join('');
+                overlay.classList.add('active');
+            } else {
+                // No results match - display feedback & suggestions
+                const popularFeatures = GROW_SITE_INDEX.slice(0, 6);
+                overlay.innerHTML = `
+                    <div class="search-no-results-card">
+                        <div class="search-no-results-icon">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                        </div>
+                        <div class="search-no-results-title">No page found for "${escapeHTML(query)}"</div>
+                        <div class="search-no-results-msg">The item or topic you searched is not available on our website.</div>
+                        <div class="search-suggestions-title">Try our available features on GROW:</div>
+                        <div class="search-suggestions-chips">
+                            ${popularFeatures.map(f => `
+                                <a href="${f.url}" class="search-chip">
+                                    <i class="fa-solid ${f.icon}"></i> ${f.title.split('&')[0].trim()}
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                overlay.classList.add('active');
+            }
+            selectedIndex = -1;
+        }
+
+        // Event handler for typing in search input
+        input.addEventListener('input', (e) => {
+            performSearch(e.target.value);
+        });
+
+        // Focus event
+        input.addEventListener('focus', (e) => {
+            if (e.target.value.trim()) {
+                performSearch(e.target.value);
+            }
+        });
+
+        // Keydown handling for Enter & Arrow Navigation
+        input.addEventListener('keydown', (e) => {
+            const items = overlay.querySelectorAll('.search-result-item');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (items.length > 0) {
+                    selectedIndex = (selectedIndex + 1) % items.length;
+                    updateItemFocus(items);
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (items.length > 0) {
+                    selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+                    updateItemFocus(items);
+                }
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (selectedIndex >= 0 && items[selectedIndex]) {
+                    window.location.href = items[selectedIndex].getAttribute('data-url');
+                } else if (items.length > 0) {
+                    // Navigate to top match
+                    window.location.href = items[0].getAttribute('data-url');
+                } else {
+                    performSearch(input.value);
+                }
+            } else if (e.key === 'Escape') {
+                overlay.classList.remove('active');
+            }
+        });
+
+        function updateItemFocus(items) {
+            items.forEach((it, idx) => {
+                if (idx === selectedIndex) {
+                    it.classList.add('focused');
+                    it.scrollIntoView({ block: 'nearest' });
+                } else {
+                    it.classList.remove('focused');
+                }
+            });
+        }
+
+        // Button click handler
+        if (button) {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const query = input.value.trim();
+                if (!query) return;
+                const matches = GROW_SITE_INDEX.filter(item => {
+                    const clean = query.toLowerCase();
+                    return item.title.toLowerCase().includes(clean) ||
+                           item.description.toLowerCase().includes(clean) ||
+                           item.category.toLowerCase().includes(clean) ||
+                           item.keywords.some(k => k.toLowerCase().includes(clean));
+                });
+                if (matches.length > 0) {
+                    window.location.href = matches[0].url;
+                } else {
+                    performSearch(query);
+                }
+            });
+        }
+
+        // Close overlay on outside click
+        document.addEventListener('click', (e) => {
+            if (!box.contains(e.target)) {
+                overlay.classList.remove('active');
+            }
+        });
+    });
+}
+
+function escapeHTML(str) {
+    return str.replace(/[&<>'"]/g, 
+        tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[tag] || tag)
+    );
 }

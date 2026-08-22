@@ -2005,8 +2005,8 @@ footer p {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 24px;
-    margin-top: -55px;
-    margin-bottom: 50px;
+    margin-top: 0;
+    margin-bottom: 40px;
     position: relative;
     z-index: 10;
 }
@@ -2769,6 +2769,561 @@ body.dark-theme .theme-toggle-btn:hover {
         height: 40px;
         font-size: 17px;
     }
+
+    .market-controls-header {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+        padding: 16px 18px;
+    }
+
+    .live-api-status-badge {
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        font-size: 12.5px;
+    }
+
+    .refresh-market-btn {
+        margin: 0 auto;
+        justify-content: center;
+        align-self: center;
+    }
+}
+
+/* Mandi Market Live API Sync & Refresh Button Styling */
+.market-controls-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: -55px;
+    margin-bottom: 28px;
+    padding: 16px 24px;
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #e2ece4;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+    position: relative;
+    z-index: 20;
+}
+
+.market-search-bar {
+    max-width: 760px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-bottom: 30px !important;
+}
+
+.quick-crop-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 35px;
+}
+
+/* ==========================================
+   MARKET TABLE & HORIZONTAL SCROLLBAR SYSTEM
+========================================== */
+
+.mobile-table-scroll-hint {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #2E7D32;
+    background: rgba(46, 125, 50, 0.08);
+    border: 1px solid rgba(46, 125, 50, 0.2);
+    padding: 8px 14px;
+    border-radius: 30px;
+    margin-bottom: 12px;
+    width: fit-content;
+}
+
+@media (max-width: 991px) {
+    .mobile-table-scroll-hint {
+        display: inline-flex;
+    }
+}
+
+.market-table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 16px;
+    border: 1px solid #e0ede2;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    background: #ffffff;
+    margin-bottom: 30px;
+}
+
+/* Custom Visible Scrollbar for Mobile & Desktop */
+.market-table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.market-table-container::-webkit-scrollbar-track {
+    background: #f1f7f2;
+    border-radius: 8px;
+}
+
+.market-table-container::-webkit-scrollbar-thumb {
+    background: #4CAF50;
+    border-radius: 8px;
+}
+
+.market-table-container::-webkit-scrollbar-thumb:hover {
+    background: #2E7D32;
+}
+
+.market-table {
+    width: 100%;
+    min-width: 860px;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+}
+
+.market-table th {
+    background: #f4f9f5;
+    color: #1b382b;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    padding: 14px 18px;
+    border-bottom: 2px solid #d8ebd9;
+    white-space: nowrap;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+.market-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #eef5f0;
+    color: #333333;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.market-table tbody tr {
+    transition: background 0.2s ease;
+    cursor: pointer;
+}
+
+.market-table tbody tr:hover {
+    background: #f8fcf9;
+}
+
+/* Dark Mode Overrides for Market Table & Scrollbar */
+body.dark-theme .mobile-table-scroll-hint {
+    background: rgba(129, 199, 132, 0.12) !important;
+    border-color: rgba(129, 199, 132, 0.3) !important;
+    color: #81C784 !important;
+}
+
+body.dark-theme .market-table-container {
+    background: #1A241E !important;
+    border-color: #2A3B30 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-theme .market-table-container::-webkit-scrollbar-track {
+    background: #141C16 !important;
+}
+
+body.dark-theme .market-table-container::-webkit-scrollbar-thumb {
+    background: #4CAF50 !important;
+}
+
+body.dark-theme .market-table th {
+    background: #141C16 !important;
+    color: #81C784 !important;
+    border-bottom-color: #2A3B30 !important;
+}
+
+body.dark-theme .market-table td {
+    border-bottom-color: #25362B !important;
+    color: #F0F5F1 !important;
+}
+
+body.dark-theme .market-table tbody tr:hover {
+    background: #233128 !important;
+}
+
+/* ==========================================
+   CROP ANALYSIS MODAL POPUP SYSTEM
+========================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 18, 12, 0.72);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 20px;
+}
+
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-box.analysis-modal-box {
+    width: 860px;
+    max-width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 32px 36px;
+    position: relative;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+    border: 1px solid #e0ede2;
+    animation: modalPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+    from {
+        transform: scale(0.92) translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-close-btn-round {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    background: #eef7f0;
+    border: 1px solid #c8e6c9;
+    color: #2E7D32;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    z-index: 10;
+}
+
+.modal-close-btn-round:hover {
+    background: #2E7D32;
+    color: #ffffff;
+    transform: scale(1.1) rotate(90deg);
+}
+
+body.dark-theme .modal-overlay {
+    background: rgba(0, 0, 0, 0.82) !important;
+}
+
+body.dark-theme .modal-box.analysis-modal-box {
+    background: #162019 !important;
+    border-color: #2A3B30 !important;
+    color: #F0F5F1 !important;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7) !important;
+}
+
+body.dark-theme .modal-close-btn-round {
+    background: #233128 !important;
+    border-color: #344B39 !important;
+    color: #81C784 !important;
+}
+
+body.dark-theme .modal-close-btn-round:hover {
+    background: #81C784 !important;
+    color: #0E1410 !important;
+}
+
+/* ==========================================
+   CROP ANALYSIS HEADER & HERO BOX LAYOUT
+========================================== */
+
+.crop-header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px dashed #d0e4d4;
+}
+
+.crop-title-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1;
+    min-width: 280px;
+}
+
+.crop-category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    background: rgba(46, 125, 50, 0.1);
+    color: #2E7D32;
+    border: 1px solid rgba(46, 125, 50, 0.22);
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.crop-title-group h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #1b382b;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    line-height: 1.25;
+}
+
+.crop-title-group h2 i {
+    font-size: 22px;
+    color: #2E7D32;
+    background: rgba(46, 125, 50, 0.12);
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.crop-sentiment-text {
+    font-size: 14px;
+    color: #555555;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.crop-sentiment-tag {
+    color: #1B5E20;
+    font-weight: 700;
+    background: #E8F5E9;
+    padding: 3px 10px;
+    border-radius: 6px;
+}
+
+.price-hero-box {
+    background: linear-gradient(135deg, #f4f9f5, #eef7f0);
+    border: 1.5px solid #c8e6c9;
+    border-radius: 20px;
+    padding: 18px 24px;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    min-width: 240px;
+    box-shadow: 0 6px 20px rgba(46, 125, 50, 0.06);
+}
+
+.modal-price-large {
+    font-family: 'Poppins', sans-serif;
+    font-size: 34px;
+    font-weight: 800;
+    color: #1B5E20;
+    line-height: 1.1;
+    margin-bottom: 2px;
+}
+
+.price-hero-unit {
+    font-size: 12px;
+    color: #666666;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.price-change-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 700;
+}
+
+.price-change-pill.price-up {
+    background: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #A5D6A7;
+}
+
+.price-change-pill.price-down {
+    background: #FFEBEE;
+    color: #C62828;
+    border: 1px solid #EF9A9A;
+}
+
+/* Dark Mode Overrides for Analysis Header & Hero Box */
+body.dark-theme .crop-header-wrapper {
+    border-bottom-color: #2A3B30 !important;
+}
+
+body.dark-theme .crop-category-badge {
+    background: rgba(129, 199, 132, 0.12) !important;
+    border-color: rgba(129, 199, 132, 0.3) !important;
+    color: #81C784 !important;
+}
+
+body.dark-theme .crop-title-group h2 {
+    color: #F0F5F1 !important;
+}
+
+body.dark-theme .crop-title-group h2 i {
+    background: rgba(129, 199, 132, 0.15) !important;
+    color: #81C784 !important;
+}
+
+body.dark-theme .crop-sentiment-text {
+    color: #B0C4B5 !important;
+}
+
+body.dark-theme .crop-sentiment-tag {
+    background: rgba(129, 199, 132, 0.18) !important;
+    color: #81C784 !important;
+}
+
+body.dark-theme .price-hero-box {
+    background: #141C16 !important;
+    border-color: #2A3B30 !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-theme .modal-price-large {
+    color: #81C784 !important;
+}
+
+body.dark-theme .price-hero-unit {
+    color: #A0B5A6 !important;
+}
+
+@media (max-width: 600px) {
+    .crop-header-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .price-hero-box {
+        text-align: center;
+        align-items: center;
+        width: 100%;
+        min-width: unset;
+    }
+}
+
+.govt-ver-small {
+    font-size: 11px;
+    color: #2E7D32;
+    font-weight: 600;
+    margin-top: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+body.dark-theme .govt-ver-small {
+    color: #81C784 !important;
+}
+
+.live-api-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background: rgba(46, 125, 50, 0.08);
+    border: 1px solid rgba(46, 125, 50, 0.25);
+    border-radius: 50px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #1b5e20;
+}
+
+.refresh-market-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #2E7D32, #1B5E20);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(46, 125, 50, 0.3);
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.refresh-market-btn:hover {
+    background: linear-gradient(135deg, #388E3C, #2E7D32);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(46, 125, 50, 0.45);
+}
+
+.refresh-market-btn:active {
+    transform: translateY(0);
+}
+
+.refresh-spin {
+    animation: spinRefresh 0.8s linear infinite !important;
+}
+
+@keyframes spinRefresh {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+body.dark-theme .market-controls-header {
+    background: #1A241E !important;
+    border-color: #2A3B30 !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-theme .live-api-status-badge {
+    background: rgba(129, 199, 132, 0.12) !important;
+    border-color: rgba(129, 199, 132, 0.3) !important;
+    color: #81C784 !important;
+}
+
+body.dark-theme .refresh-market-btn {
+    background: linear-gradient(135deg, #2E7D32, #4CAF50) !important;
+    color: #0E1410 !important;
+    box-shadow: 0 6px 18px rgba(76, 175, 80, 0.35) !important;
+}
+
+body.dark-theme .refresh-market-btn:hover {
+    background: linear-gradient(135deg, #4CAF50, #66BB6A) !important;
 }
 
 /* ==========================================
@@ -4751,5 +5306,40 @@ body.dark-theme .n8n-iframe-wrapper {
         justify-content: center;
         width: 100%;
     }
+}
+
+/* ==========================================
+   GLOBAL BADGE STYLES (High Visibility & Contrast)
+========================================== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #1B5E20;
+    color: #ffffff !important;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 6px 16px;
+    border-radius: 50px;
+    box-shadow: 0 2px 8px rgba(27, 94, 32, 0.25);
+    line-height: 1.4;
+}
+
+.badge i {
+    color: #81C784 !important;
+    font-size: 0.9rem;
+}
+
+body.dark-theme .badge {
+    background: rgba(76, 175, 80, 0.2);
+    color: #A5D6A7 !important;
+    border: 1px solid rgba(76, 175, 80, 0.4);
+    box-shadow: none;
+}
+
+body.dark-theme .badge i {
+    color: #81C784 !important;
 }
 

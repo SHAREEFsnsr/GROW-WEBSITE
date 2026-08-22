@@ -325,16 +325,26 @@ function generateAIResponse(q) {
 
     // Mandi Rates & Market
     if (query.includes('mandi') || query.includes('rate') || query.includes('price') || query.includes('market') || query.includes('cost')) {
+        const ca = window.cropsAnalytics;
+        const wRate = ca && ca.wheat ? ca.wheat.modalRate : 2285;
+        const wChg = ca && ca.wheat ? ca.wheat.change : '+1.8%';
+        const mRate = ca && ca.mustard ? ca.mustard.modalRate : 5850;
+        const mChg = ca && ca.mustard ? ca.mustard.change : '+4.2%';
+        const pRate = ca && ca.paddy ? ca.paddy.modalRate : 4500;
+        const pChg = ca && ca.paddy ? ca.paddy.change : '+2.4%';
+        const sRate = ca && ca.soybean ? ca.soybean.modalRate : 4620;
+        const cRate = ca && ca.cotton ? ca.cotton.modalRate : 7150;
+
         if (query.includes('wheat') || query.includes('gehun')) {
-            return `🌾 <strong>Wheat (Gehun) Mandi Update:</strong><br>• National Modal Rate: <strong>₹ 2,285 / Quintal</strong> (+1.8% today)<br>• Top Mandi: Khanna Mandi, Punjab (₹ 2,320 / Qtl)<br>• MSP Rate: ₹ 2,275 / Qtl.<br><a href="market.html?search=wheat" style="color:#2E7D32; font-weight:700;">View Full Wheat Market Analysis →</a>`;
+            return `🌾 <strong>Wheat (Gehun) Mandi Update:</strong><br>• National Modal Rate: <strong>₹ ${wRate.toLocaleString()} / Quintal</strong> (${wChg} today)<br>• Top Mandi: Khanna Mandi, Punjab<br>• MSP Rate: ₹ 2,275 / Qtl.<br><a href="market.html?search=wheat" style="color:#2E7D32; font-weight:700;">View Full Wheat Market Analysis →</a>`;
         }
         if (query.includes('mustard') || query.includes('sarson')) {
-            return `🟡 <strong>Mustard (Sarson) Update:</strong><br>• Modal Rate: <strong>₹ 5,850 / Quintal</strong> (+4.2% today)<br>• Top Mandi: Bharatpur, Rajasthan (₹ 5,980 / Qtl)<br>• Trend: Strong buyer demand from oil mills.<br><a href="market.html?search=mustard" style="color:#2E7D32; font-weight:700;">View Mustard Price Details →</a>`;
+            return `🟡 <strong>Mustard (Sarson) Update:</strong><br>• Modal Rate: <strong>₹ ${mRate.toLocaleString()} / Quintal</strong> (${mChg} today)<br>• Top Mandi: Bharatpur, Rajasthan<br>• Trend: Strong buyer demand from oil mills.<br><a href="market.html?search=mustard" style="color:#2E7D32; font-weight:700;">View Mustard Price Details →</a>`;
         }
         if (query.includes('paddy') || query.includes('rice') || query.includes('dhan')) {
-            return `🌾 <strong>Paddy / Basmati Update:</strong><br>• Modal Rate: <strong>₹ 4,500 / Quintal</strong> (+2.4% today)<br>• Top Mandi: Karnal, Haryana (₹ 4,650 / Qtl)<br>• High export demand for Basmati 1121 variety.`;
+            return `🌾 <strong>Paddy / Basmati Update:</strong><br>• Modal Rate: <strong>₹ ${pRate.toLocaleString()} / Quintal</strong> (${pChg} today)<br>• Top Mandi: Karnal, Haryana<br>• High export demand for Basmati 1121 variety.`;
         }
-        return `📈 <strong>Live Mandi Summary:</strong><br>• Wheat: ₹ 2,285 / Qtl<br>• Mustard: ₹ 5,850 / Qtl<br>• Paddy/Basmati: ₹ 4,500 / Qtl<br>• Soybean: ₹ 4,620 / Qtl<br>• Cotton: ₹ 7,150 / Qtl<br><br><a href="market.html" style="color:#2E7D32; font-weight:700;">Explore All Mandi Prices →</a>`;
+        return `📈 <strong>Live Agmarknet Mandi Summary:</strong><br>• Wheat: ₹ ${wRate.toLocaleString()} / Qtl (${wChg})<br>• Mustard: ₹ ${mRate.toLocaleString()} / Qtl (${mChg})<br>• Paddy/Basmati: ₹ ${pRate.toLocaleString()} / Qtl (${pChg})<br>• Soybean: ₹ ${sRate.toLocaleString()} / Qtl<br>• Cotton: ₹ ${cRate.toLocaleString()} / Qtl<br><br><a href="market.html" style="color:#2E7D32; font-weight:700;">Explore All Mandi Prices →</a>`;
     }
 
     // Govt Schemes & Subsidies

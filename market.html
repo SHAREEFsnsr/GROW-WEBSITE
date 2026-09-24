@@ -150,9 +150,12 @@
                     <i class="fa-solid fa-wheat-awn"></i>
                 </div>
                 <input type="text" id="market-search-input" class="form-control"
-                    placeholder="Search mandi crop prices (e.g. Wheat, Mustard, Soybean)..."
+                    placeholder="Search mandi crop prices, states or cities (e.g. Wheat, Mustard, Punjab, Nashik)..."
                     onkeypress="handleKeyPress(event)"
                     oninput="handleSearchInput()">
+                <button class="gps-in-bar-btn" id="market-gps-btn" onclick="getMarketLocation()" title="Detect auto location / Use my current GPS location">
+                    <i class="fa-solid fa-crosshairs" id="market-gps-icon"></i>
+                </button>
                 <button id="search-btn" onclick="executeCropSearch()">
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <span>Search</span>
@@ -747,6 +750,56 @@
             if (e.key === 'Enter') {
                 executeCropSearch();
             }
+        }
+
+        async function getMarketLocation() {
+            if (!navigator.geolocation) {
+                alert("Geolocation is not supported by your browser.");
+                return;
+            }
+
+            const gpsBtn = document.getElementById('market-gps-btn');
+            const gpsIcon = document.getElementById('market-gps-icon');
+            const searchInput = document.getElementById('market-search-input');
+
+            if (gpsBtn) gpsBtn.classList.add('locating');
+            if (gpsIcon) {
+                gpsIcon.className = 'fa-solid fa-spinner fa-spin';
+            }
+
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                const { latitude: lat, longitude: lon } = pos.coords;
+                try {
+                    const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+                    const data = await res.json();
+                    
+                    const locationTerm = data.city || data.locality || data.principalSubdivision || "Punjab";
+                    
+                    if (searchInput) {
+                        searchInput.value = locationTerm;
+                    }
+                    executeCropSearch();
+                } catch (err) {
+                    if (searchInput) {
+                        searchInput.value = "Punjab";
+                    }
+                    executeCropSearch();
+                } finally {
+                    if (gpsBtn) gpsBtn.classList.remove('locating');
+                    if (gpsIcon) {
+                        gpsIcon.className = 'fa-solid fa-crosshairs';
+                    }
+                }
+            }, (err) => {
+                if (gpsBtn) gpsBtn.classList.remove('locating');
+                if (gpsIcon) {
+                    gpsIcon.className = 'fa-solid fa-crosshairs';
+                }
+                alert("Could not retrieve GPS location. Please check browser location permissions or type your location manually.");
+            }, {
+                timeout: 10000,
+                enableHighAccuracy: true
+            });
         }
 
         function renderCropAnalysis(crop) {

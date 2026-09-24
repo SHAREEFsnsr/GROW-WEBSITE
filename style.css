@@ -340,9 +340,9 @@ main {
     font-size: 0.92rem;
 }
 
-.search-box button,
-.market-search-bar button,
-.weather-search-bar button {
+.search-box button:not(.gps-in-bar-btn),
+.market-search-bar button:not(.gps-in-bar-btn),
+.weather-search-bar button:not(.gps-in-bar-btn) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -364,18 +364,64 @@ main {
     flex-shrink: 0;
 }
 
-.search-box button:hover,
-.market-search-bar button:hover,
-.weather-search-bar button:hover {
+.search-box button:not(.gps-in-bar-btn):hover,
+.market-search-bar button:not(.gps-in-bar-btn):hover,
+.weather-search-bar button:not(.gps-in-bar-btn):hover {
     background: linear-gradient(135deg, #388E3C 0%, #2E7D32 100%);
     box-shadow: 0 8px 22px rgba(46, 125, 50, 0.45);
     transform: scale(1.02);
 }
 
-.search-box button i,
-.market-search-bar button i,
-.weather-search-bar button i {
+.search-box button:not(.gps-in-bar-btn) i,
+.market-search-bar button:not(.gps-in-bar-btn) i,
+.weather-search-bar button:not(.gps-in-bar-btn) i {
     font-size: 0.9rem;
+}
+
+/* GPS Auto-Location Button inside Search Bars */
+.gps-in-bar-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50% !important;
+    background: rgba(46, 125, 50, 0.1) !important;
+    border: none !important;
+    color: var(--primary-color, #2E7D32) !important;
+    font-size: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 0 !important;
+    box-shadow: none !important;
+    transition: all 0.25s ease;
+}
+
+.gps-in-bar-btn:hover {
+    background: var(--primary-color, #2E7D32) !important;
+    color: #ffffff !important;
+    transform: scale(1.08) !important;
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3) !important;
+}
+
+.gps-in-bar-btn.locating {
+    animation: gps-pulse 1.2s infinite ease-in-out;
+}
+
+@keyframes gps-pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.15); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+body.dark-theme .gps-in-bar-btn {
+    background: rgba(255, 255, 255, 0.12) !important;
+    color: #4CAF50 !important;
+}
+
+body.dark-theme .gps-in-bar-btn:hover {
+    background: #4CAF50 !important;
+    color: #ffffff !important;
 }
 
 /* Mobile Responsive Search Bar Styling */

@@ -3975,6 +3975,246 @@ body.dark-theme select option {
     color: #F0F5F1 !important;
 }
 
+/* ===== CROP DOCTOR AI ANALYSIS REPORT - HIGH CONTRAST DARK MODE ===== */
+body.dark-theme .report-card {
+    background: #141D17 !important;
+    border: 1px solid #2A3B30 !important;
+    color: #F0F5F1 !important;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.dark-theme .report-hero {
+    border-bottom: 1px solid #2A3B30 !important;
+}
+
+body.dark-theme .report-title {
+    color: #FFFFFF !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-theme .report-sci {
+    color: #C8E6C9 !important;
+}
+
+body.dark-theme .report-body {
+    background: #141D17 !important;
+    color: #F0F5F1 !important;
+}
+
+body.dark-theme .results-placeholder {
+    background: #1A241E !important;
+    border-color: #2A3B30 !important;
+    color: #B0C4B5 !important;
+}
+
+body.dark-theme .results-placeholder h3 {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .results-placeholder p {
+    color: #B0C4B5 !important;
+}
+
+body.dark-theme .ai-loader {
+    background: #1A241E !important;
+    border-color: #2A3B30 !important;
+    color: #F0F5F1 !important;
+}
+
+body.dark-theme .ai-loader p {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .ai-loader small {
+    color: #A0B5A6 !important;
+}
+
+body.dark-theme #loader-status {
+    color: #81C784 !important;
+}
+
+body.dark-theme .non-plant-card {
+    background: #251B10 !important;
+    border-color: #F57C00 !important;
+    color: #FFE0B2 !important;
+}
+
+body.dark-theme .non-plant-card h3 {
+    color: #FFB74D !important;
+}
+
+body.dark-theme #non-plant-msg {
+    color: #FFE0B2 !important;
+}
+
+/* Prediction Confidence Bars in Dark Mode */
+body.dark-theme .pred-bar-wrap {
+    margin-bottom: 12px !important;
+}
+
+body.dark-theme .pred-label {
+    color: #E2EAE4 !important;
+    font-weight: 600 !important;
+}
+
+body.dark-theme .pred-bar {
+    background: #0E1611 !important;
+    border: 1px solid #2A3B30 !important;
+}
+
+/* Info Grid Items in Dark Mode */
+body.dark-theme .info-grid .info-item {
+    background: #1C2920 !important;
+    border: 1px solid #2E4233 !important;
+}
+
+body.dark-theme .info-grid .info-item .lbl {
+    color: #81C784 !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.6px !important;
+}
+
+body.dark-theme .info-grid .info-item .val {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+}
+
+/* Analysis Section Blocks (.rsec) High-Contrast Dark Mode Themes */
+body.dark-theme .rsec {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+}
+
+body.dark-theme .rsec h4 {
+    font-weight: 800 !important;
+    font-size: 15px !important;
+}
+
+body.dark-theme .rsec ul li,
+body.dark-theme .rsec p {
+    color: #F0F5F1 !important;
+    font-weight: 500 !important;
+}
+
+/* Observed Symptoms Section */
+body.dark-theme .rsec-sym {
+    background: #252212 !important;
+    border-left: 4px solid #FFD54F !important;
+    border-top: 1px solid #3A351C !important;
+    border-right: 1px solid #3A351C !important;
+    border-bottom: 1px solid #3A351C !important;
+}
+body.dark-theme .rsec-sym h4 {
+    color: #FFE082 !important;
+}
+body.dark-theme .rsec-sym ul li {
+    color: #FFF59D !important;
+}
+
+/* Cause & Pathogen Section */
+body.dark-theme .rsec-cause {
+    background: #1A2621 !important;
+    border-left: 4px solid #90A4AE !important;
+    border-top: 1px solid #2A3B33 !important;
+    border-right: 1px solid #2A3B33 !important;
+    border-bottom: 1px solid #2A3B33 !important;
+}
+body.dark-theme .rsec-cause h4 {
+    color: #B0BEC5 !important;
+}
+body.dark-theme .rsec-cause p {
+    color: #ECEFF1 !important;
+}
+
+/* Prevention Measures Section */
+body.dark-theme .rsec-prev {
+    background: #12281A !important;
+    border-left: 4px solid #66BB6A !important;
+    border-top: 1px solid #1D3E29 !important;
+    border-right: 1px solid #1D3E29 !important;
+    border-bottom: 1px solid #1D3E29 !important;
+}
+body.dark-theme .rsec-prev h4 {
+    color: #81C784 !important;
+}
+body.dark-theme .rsec-prev ul li {
+    color: #E8F5E9 !important;
+}
+
+/* Organic Remedies Section */
+body.dark-theme .rsec-org {
+    background: #182B18 !important;
+    border-left: 4px solid #9CCC65 !important;
+    border-top: 1px solid #244224 !important;
+    border-right: 1px solid #244224 !important;
+    border-bottom: 1px solid #244224 !important;
+}
+body.dark-theme .rsec-org h4 {
+    color: #AED581 !important;
+}
+body.dark-theme .rsec-org ul li {
+    color: #F1F8E9 !important;
+}
+
+/* Chemical Treatments Section */
+body.dark-theme .rsec-chem {
+    background: #281D13 !important;
+    border-left: 4px solid #FFB74D !important;
+    border-top: 1px solid #3E2D1E !important;
+    border-right: 1px solid #3E2D1E !important;
+    border-bottom: 1px solid #3E2D1E !important;
+}
+body.dark-theme .rsec-chem h4 {
+    color: #FFCC80 !important;
+}
+body.dark-theme .rsec-chem ul li {
+    color: #FFF3E0 !important;
+}
+
+/* Agronomist Advice Section */
+body.dark-theme .rsec-exp {
+    background: #281721 !important;
+    border-left: 4px solid #F48FB1 !important;
+    border-top: 1px solid #3E2434 !important;
+    border-right: 1px solid #3E2434 !important;
+    border-bottom: 1px solid #3E2434 !important;
+}
+body.dark-theme .rsec-exp h4 {
+    color: #F8BBD0 !important;
+}
+body.dark-theme .rsec-exp p {
+    color: #FCE4EC !important;
+}
+
+/* Disclaimer Box */
+body.dark-theme .disclaimer {
+    background: #141C16 !important;
+    border: 1px solid #2A3B30 !important;
+    color: #A0B5A6 !important;
+}
+
+/* Crop Doctor Input Form Elements in Dark Mode */
+body.dark-theme #crop-hint,
+body.dark-theme #ai-provider-select {
+    background: #141C16 !important;
+    border: 1.5px solid #2A3B30 !important;
+    color: #FFFFFF !important;
+}
+
+body.dark-theme #crop-hint:focus,
+body.dark-theme #ai-provider-select:focus {
+    border-color: #4CAF50 !important;
+}
+
+body.dark-theme #ai-api-key-input {
+    background: #111813 !important;
+    border: 1.5px solid #2A3B30 !important;
+    color: #FFFFFF !important;
+}
+
+body.dark-theme #ai-api-key-input::placeholder {
+    color: #7A9382 !important;
+}
+
 /* Market Page & Crop Chips Dark Mode Fixes */
 body.dark-theme .crop-chip {
     background: #1A241E !important;

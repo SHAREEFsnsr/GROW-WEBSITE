@@ -1142,6 +1142,16 @@
             chemical:['Tricyclazole 75% WP @ 0.6 g/L — spray at first sign of lesions','Isoprothiolane 40% EC @ 1.5 ml/L — systemic, most effective','Carbendazim 50% WP @ 1 g/L for moderate infections'],
             expert:'URGENT for neck blast — if panicle emerges and shows blast, contact KVK. Once neck is infected, no chemical can save yield.'
         },
+        'rice___healthy': {
+            crop:'Rice / Paddy', disease:'Healthy — No Disease Detected', sci:'Oryza sativa',
+            severity:'None', part:'None',
+            symptoms:['Dark green upright leaves without spindle lesions','Normal tillering and root system','No yellowing or bacterial streaking visible','Healthy panicle development'],
+            cause:'No pathogen detected. The rice crop leaf appears healthy.',
+            prevention:['Maintain 2-5 cm standing water during tillering and panicle stage','Apply balanced NPK fertilizer with Zinc Sulphate 21% @ 10kg/acre','Monitor for stem borer and blast weekly'],
+            organic:['Apply Neem cake @ 50 kg/acre at soil preparation','Spray Pseudomonas fluorescens @ 5 g/L as protective spray'],
+            chemical:['No chemical treatment needed. Your paddy crop is healthy!','Prophylactic zinc application if leaves show chlorosis'],
+            expert:'Maintain proper water management and routine field scouting.'
+        },
 
         /* ---- WHEAT ---- */
         'wheat___yellow_rust': {
@@ -1153,6 +1163,48 @@
             organic:['No highly effective organic cure — prevention through resistant varieties is key','Neem oil spray as early intervention in mild outbreaks','Sulfur 80% WP @ 3 g/L as protective spray before first sign'],
             chemical:['Propiconazole 25% EC @ 1 ml/L — single spray at first sign is very effective','Tebuconazole 25.9% EC @ 1 ml/L — systemic triazole fungicide','Hexaconazole 5% EC @ 2 ml/L — effective for severe outbreaks'],
             expert:'URGENT — Yellow rust can destroy 30–70% of yield if not controlled within 5–7 days of first sign. Contact KVK immediately.'
+        },
+        'wheat___healthy': {
+            crop:'Wheat', disease:'Healthy — No Disease Detected', sci:'Triticum aestivum',
+            severity:'None', part:'None',
+            symptoms:['Vigorous green leaves without yellow stripe pustules','Normal tillering and crown root initiation','No smut or black powder on heads'],
+            cause:'No pathogen detected. The wheat leaf appears healthy.',
+            prevention:['Irrigate at critical Crown Root Initiation (CRI) stage (21 days after sowing)','Apply split doses of Neem-coated Urea','Scout for yellow rust in cool humid February days'],
+            organic:['Apply FYM compost @ 8-10 Tonnes/acre','Spray seaweed extract during flowering stage'],
+            chemical:['No chemical treatment required. Your wheat crop is healthy!','Prophylactic spray of Sulfur 80% WP before severe cold spell'],
+            expert:'Routine crop inspection at CRI and jointing stages recommended.'
+        },
+        'cotton___healthy': {
+            crop:'Cotton', disease:'Healthy — No Disease Detected', sci:'Gossypium hirsutum',
+            severity:'None', part:'None',
+            symptoms:['Broad deep green leaves with crisp margins','Healthy boll and square formation','No whitefly honey-dew or leaf curl distortion'],
+            cause:'No pathogen or major pest damage detected.',
+            prevention:['Install 5 Pheromone traps/acre to monitor pink bollworm','Maintain 3x1.5 feet spacing for canopy aeration'],
+            organic:['Spray Neem Oil 10,000 ppm @ 3 ml/L every 15 days','Hang 10 Yellow Sticky Traps per acre'],
+            chemical:['No treatment needed. Your cotton plant is healthy!'],
+            expert:'Routine field scouting during square and boll formation stages.'
+        },
+        'sugarcane___healthy': {
+            crop:'Sugarcane', disease:'Healthy — No Disease Detected', sci:'Saccharum officinarum',
+            severity:'None', part:'None',
+            symptoms:['Lush green elongated leaf blades','No red rot stalk discolouration or alcohol odor','Normal cane girth and internode development'],
+            cause:'No pathogen detected. Sugarcane foliage appears healthy.',
+            prevention:['Maintain drip fertigation for optimal cane girth','Earth up soil to support heavy canes before monsoon'],
+            organic:['Apply Trichoderma viride as soil drench'],
+            chemical:['No treatment required currently.'],
+            expert:'Inspect canes periodically for early shoot borer.'
+        },
+
+        /* ---- GENERAL HEALTHY LEAF ---- */
+        '_healthy': {
+            crop:'Plant / Crop Leaf', disease:'Healthy — No Disease Detected', sci:'Plantae',
+            severity:'None', part:'None',
+            symptoms:['Vigorous natural green foliage with no spots or lesions','Normal leaf texture and color distribution','No signs of bacterial, fungal, or viral infection','No visible pest damage or leaf curling'],
+            cause:'No disease or pathogen detected. The uploaded plant leaf is healthy and in good condition.',
+            prevention:['Maintain proper irrigation schedule and good field drainage','Apply balanced organic manure or NPK fertilizers as per crop needs','Scout crops weekly for early detection of any emerging pests'],
+            organic:['Spray Neem Oil (10,000 ppm @ 3 ml/L) as a preventive bio-repellent','Use Trichoderma viride as soil drench for root health'],
+            chemical:['No chemical treatment required. Your plant is healthy!'],
+            expert:'No immediate action required. Keep up your good farming practices!'
         },
 
         /* ---- DEFAULT FALLBACK ---- */
@@ -1370,9 +1422,11 @@
             if (cropFiltered.length > 0) candidates = cropFiltered;
         }
 
-        // Step 2: Score each candidate dynamically based on morphology, spots, and symptoms
         const symLower = selectedSymptoms.map(s => s.toLowerCase());
         const scoredCandidates = [];
+
+        // Check if leaf is visually clean green leaf (low yellowing, low browning, zero user-selected symptoms)
+        const isVisuallyHealthyLeaf = (imgAnalysis.yellowRatio < 12 && imgAnalysis.brownRatio < 12 && symLower.length === 0);
 
         for (const [key, entry] of candidates) {
             let score = 0;
@@ -1400,14 +1454,17 @@
                 }
             }
 
-            // Visual feature correlation
+            // Visual feature correlation & Healthy Leaf detection
             if (entry.severity === 'None') {
-                if (imgAnalysis.greenRatio >= 30 && imgAnalysis.yellowRatio < 10 && imgAnalysis.brownRatio < 10 && symLower.length === 0) {
-                    score += 25;
+                if (isVisuallyHealthyLeaf || (imgAnalysis.foliageRatio >= 25 && imgAnalysis.yellowRatio < 10 && imgAnalysis.brownRatio < 10 && symLower.length === 0)) {
+                    score += 65; // High confidence bonus for healthy leaf!
                 } else if (symLower.length > 0) {
-                    score -= 30;
+                    score -= 35;
                 }
             } else {
+                if (isVisuallyHealthyLeaf) {
+                    score -= 30; // Penalize disease entries if leaf shows zero yellow/brown lesions or symptoms
+                }
                 const disLower = entry.disease.toLowerCase();
                 if (imgAnalysis.yellowRatio > 10 && (disLower.includes('yellow') || disLower.includes('blight') || disLower.includes('rust') || disLower.includes('curl'))) {
                     score += 15;
@@ -1424,7 +1481,17 @@
         scoredCandidates.sort((a, b) => b.score - a.score);
 
         if (scoredCandidates.length > 0) {
-            return { ...scoredCandidates[0].entry, topCandidates: scoredCandidates.slice(0, 3) };
+            const topCandidate = scoredCandidates[0];
+            // If the leaf is clean green with 0 symptoms or top candidate is healthy, return healthy entry!
+            if (topCandidate.entry.severity === 'None' || (isVisuallyHealthyLeaf && topCandidate.score < 25)) {
+                const healthyEntry = scoredCandidates.find(c => c.entry.severity === 'None') || { entry: DISEASE_DB['_healthy'] };
+                return { ...healthyEntry.entry, topCandidates: scoredCandidates.slice(0, 3) };
+            }
+            return { ...topCandidate.entry, topCandidates: scoredCandidates.slice(0, 3) };
+        }
+
+        if (isVisuallyHealthyLeaf) {
+            return { ...DISEASE_DB['_healthy'], topCandidates: [] };
         }
 
         return { ...DISEASE_DB['_default'], topCandidates: [] };
@@ -1795,13 +1862,19 @@ Return ONLY valid JSON matching this exact structure (no markdown code blocks, n
 
         const sevBadge = document.getElementById('r-sev-badge');
         sevBadge.textContent  = isHealthy ? '✅ Healthy' : `⚠ ${db.severity} Severity`;
-        sevBadge.className    = `rpill ${sevClass(db.severity)}`;
-
-        const engBadge = document.getElementById('r-engine-badge');
-        if (engBadge) engBadge.textContent = usedEngineLabel ? `Engine: ${usedEngineLabel}` : 'Engine: AI Vision';
+        const reportHero = document.querySelector('.report-hero');
+        if (reportHero) {
+            if (isHealthy) {
+                reportHero.style.background = 'linear-gradient(135deg, #2E7D32, #4CAF50)';
+            } else if (db.severity === 'Critical' || db.severity === 'Severe') {
+                reportHero.style.background = 'linear-gradient(135deg, #B71C1C, #D32F2F)';
+            } else {
+                reportHero.style.background = 'linear-gradient(135deg, #1B5E20, #388E3C)';
+            }
+        }
 
         // Title
-        document.getElementById('r-title').textContent = db.disease;
+        document.getElementById('r-title').textContent = isHealthy ? `🌱 ${db.disease}` : db.disease;
         document.getElementById('r-sci').textContent   = db.sci ? `(${db.sci})` : '';
 
         // Prediction confidence bars
